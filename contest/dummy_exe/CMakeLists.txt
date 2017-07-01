@@ -9,4 +9,5 @@ target_link_libraries(dummy_exe
 	tclap
 	Boost::boost
 	Boost::program_options
+	tbb_static
 )
