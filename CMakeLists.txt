@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.2)
 
 project(contest-template)
 
@@ -18,6 +18,7 @@ if(WIN32)
 endif()
 
 if (UNIX)
+    ucm_add_flags(-lpthread)
     ucm_add_linker_flags(EXE -lpthread)
 endif()
 
@@ -26,10 +27,16 @@ if (APPLE)
     ucm_add_linker_flags(EXE -L/opt/X11/lib -lglut)
 endif()
 
-set(BOOST_DOWNLOAD_TO_BINARY_DIR ON)
-set(SFML_BUILD_NETWORK OFF)
-set(SFML_BUILD_AUDIO OFF)
-set(SFGUI_BUILD_EXAMPLES OFF)
+set(BOOST_DOWNLOAD_TO_BINARY_DIR ON CACHE BOOL "download to binary")
+set(BOOST_IOSTREAMS_ENABLE_BZIP2 OFF CACHE BOOL "use bzip2")
+
+set(SFML_BUILD_NETWORK OFF CACHE BOOL "build network")
+set(SFML_BUILD_AUDIO OFF CACHE BOOL "build audio")
+
+set(TBB_BUILD_TESTS OFF)
+set(TBB_BUILD_SHARED OFF)
+set(TBB_BUILD_TBBMALLOC OFF)
+set(TBB_BUILD_TBBMALLOC_PROXY OFF)
 
 add_subdirectory(external)
 add_subdirectory(contest)
