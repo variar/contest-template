@@ -12,12 +12,18 @@
 #include <tbb/parallel_for.h>
 #include <tbb/task_scheduler_init.h>
 
+#include <stlab/concurrency/default_executor.hpp>
+#include <stlab/concurrency/future.hpp>
+
+#include <iostream>
+#include <thread>
+
 struct mytask {
   mytask(size_t n)
     :_n(n)
   {}
   void operator()() {
-    for (int i=0;i<1000000;++i) {}  // Deliberately run slow
+    for (int i=0;i<10000;++i) {}  // Deliberately run slow
     std::cerr << "[" << _n << "]";
   }
   size_t _n;
@@ -39,7 +45,7 @@ int main(int argc, char *argv[])
     tbb::task_scheduler_init init(tbb::task_scheduler_init::default_num_threads());  // Explicit number of threads
 
     std::vector<mytask> tasks;
-    for (int i=0;i<1000;++i)
+    for (int i=0;i<10;++i)
         tasks.push_back(mytask(i));
 
         tbb::parallel_for(
@@ -49,6 +55,11 @@ int main(int argc, char *argv[])
             }
         );
 
+     auto f = stlab::async(stlab::default_executor, [] { return 42; });
+      // Waiting just for illustrational purpose
+    while (!f.get_try()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
+
+    std::cout << "The answer is " << f.get_try().value() << "\n";
     
 	sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
 	while (window.isOpen())

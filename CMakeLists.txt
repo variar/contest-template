@@ -4,7 +4,7 @@ project(contest-template)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ucm.cmake)
 
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 14)
 
 set(out_dir "${CMAKE_BINARY_DIR}/output")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${out_dir}")
@@ -18,7 +18,8 @@ if(WIN32)
 endif()
 
 if (UNIX)
-    ucm_add_flags(-pthread)
+    ucm_add_flags(-pthread  -fexceptions  -ftemplate-backtrace-limit=0)
+    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 endif()
 
  if(APPLE)

@@ -10,4 +10,5 @@ target_link_libraries(dummy_exe
 	Boost::boost
 	Boost::program_options
 	tbb_static
+	stlab
 )
