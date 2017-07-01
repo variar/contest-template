@@ -207,6 +207,8 @@ if (TBB_BUILD_STATIC)
   if (UNIX AND NOT APPLE)
     target_link_libraries(tbb_static PUBLIC pthread dl)
   endif()
+  
+  target_include_directories(tbb_static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 endif()
 
 if (TBB_BUILD_SHARED)
@@ -233,6 +235,8 @@ if (TBB_BUILD_SHARED)
   if (MSVC)
     target_compile_definitions(tbb PUBLIC __TBB_NO_IMPLICIT_LINKAGE=1)
   endif()
+  
+  target_include_directories(tbb_static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 endif()
 
 
