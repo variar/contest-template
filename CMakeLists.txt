@@ -18,13 +18,12 @@ if(WIN32)
 endif()
 
 if (UNIX)
-    ucm_add_flags(-lpthread)
-    ucm_add_linker_flags(EXE -lpthread)
+    ucm_add_flags(-pthread)
 endif()
 
-if (APPLE)
-    ucm_add_flags(-I/opt/X11/include)
-    ucm_add_linker_flags(EXE -L/opt/X11/lib -lglut)
+ if(APPLE)
+        ucm_add_flags(-I/opt/X11/include)
+        ucm_add_linker_flags(EXE -L/opt/X11/lib -lglut)
 endif()
 
 set(BOOST_DOWNLOAD_TO_BINARY_DIR ON CACHE BOOL "download to binary")
