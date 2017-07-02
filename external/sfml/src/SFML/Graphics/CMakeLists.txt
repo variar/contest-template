@@ -163,3 +163,4 @@ sfml_add_library(sfml-graphics
                  SOURCES ${SRC} ${DRAWABLES_SRC} ${RENDER_TEXTURE_SRC} ${STB_SRC}
                  DEPENDS sfml-window sfml-system
                  EXTERNAL_LIBS ${GRAPHICS_EXT_LIBS})
+cotire(sfml-graphics)

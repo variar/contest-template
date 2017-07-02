@@ -18,6 +18,8 @@
 #include <iostream>
 #include <thread>
 
+#include <boost/multiprecision/cpp_int.hpp>
+
 struct mytask {
   mytask(size_t n)
     :_n(n)
@@ -60,6 +62,15 @@ int main(int argc, char *argv[])
     while (!f.get_try()) { std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
 
     std::cout << "The answer is " << f.get_try().value() << "\n";
+    
+     using namespace boost::multiprecision;
+
+     cpp_int v = 1;
+     // Do some arithmetic:
+        for(unsigned i = 1; i <= 1000; ++i)
+            v *= i;
+
+   std::cout << v << std::endl; // prints 1000!
     
 	sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
 	while (window.isOpen())

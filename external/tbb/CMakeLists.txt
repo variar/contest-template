@@ -209,6 +209,7 @@ if (TBB_BUILD_STATIC)
   endif()
   
   target_include_directories(tbb_static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  cotire(tbb_static)
 endif()
 
 if (TBB_BUILD_SHARED)

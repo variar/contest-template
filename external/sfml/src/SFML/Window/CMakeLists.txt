@@ -4,6 +4,7 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/SFML/Window)
 
 # all source files
 set(SRC
+    ${SRCROOT}/stdafx.cpp
     ${SRCROOT}/Context.cpp
     ${INCROOT}/Context.hpp
     ${INCROOT}/Export.hpp
@@ -252,3 +253,6 @@ sfml_add_library(sfml-window
                  SOURCES ${SRC} ${PLATFORM_SRC}
                  DEPENDS sfml-system
                  EXTERNAL_LIBS ${WINDOW_EXT_LIBS})
+                 
+set_target_properties(sfml-window PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${SRCROOT}/stdafx.h")
+cotire(sfml-window)

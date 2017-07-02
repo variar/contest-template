@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 3.2)
 
+if (POLICY CMP0058)
+        # Ninja requires custom command byproducts to be explicit
+        cmake_policy(SET CMP0058 NEW)
+endif()
+
 project(contest-template)
-
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ucm.cmake)
-
 set (CMAKE_CXX_STANDARD 14)
+
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(ucm)
+include(cotire)
 
 set(out_dir "${CMAKE_BINARY_DIR}/output")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${out_dir}")
@@ -18,7 +24,8 @@ if(WIN32)
 endif()
 
 if (UNIX)
-    ucm_add_flags(-pthread  -fexceptions  -ftemplate-backtrace-limit=0)
+    ucm_add_flags(-pthread)
+    ucm_add_flags(CXX -fexceptions  -ftemplate-backtrace-limit=0)
     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 endif()
 

@@ -35,6 +35,7 @@ set( SOURCE_PATH "${PROJECT_SOURCE_DIR}/src" )
 
 set(
 	SOURCES
+	"${SOURCE_PATH}/stdafx.cpp"
 	"${INCLUDE_PATH}/SFGUI/Adjustment.hpp"
 	"${INCLUDE_PATH}/SFGUI/Alignment.hpp"
 	"${INCLUDE_PATH}/SFGUI/Bin.hpp"
@@ -323,3 +324,6 @@ install(
 	FILES cmake/Modules/FindSFGUI.cmake
 	DESTINATION "${SHARE_PATH}/cmake/Modules"
 )
+
+set_target_properties(sfgui PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${SOURCE_PATH}/stdafx.h")
+cotire(sfgui)
