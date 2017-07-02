@@ -16,6 +16,7 @@ target_link_libraries(dummy_exe
 	Boost::program_options
 	tbb_static
 	stlab
+	lemon
 )
 
 set_target_properties(dummy_exe PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h")

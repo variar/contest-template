@@ -19,6 +19,7 @@
 #include <thread>
 
 #include <boost/multiprecision/cpp_int.hpp>
+#include <lemon/list_graph.h>
 
 struct mytask {
   mytask(size_t n)
@@ -65,12 +66,20 @@ int main(int argc, char *argv[])
     
      using namespace boost::multiprecision;
 
-     cpp_int v = 1;
+     cpp_int bi = 1;
      // Do some arithmetic:
         for(unsigned i = 1; i <= 1000; ++i)
-            v *= i;
+            bi *= i;
 
-   std::cout << v << std::endl; // prints 1000!
+   std::cout << bi << std::endl; // prints 1000!
+  using namespace lemon;  
+  ListDigraph g;
+  ListDigraph::Node u = g.addNode();
+  ListDigraph::Node v = g.addNode();
+  ListDigraph::Arc  a = g.addArc(u, v);
+  std::cout << "Hello World! This is LEMON library here." << std::endl;
+  std::cout << "We have a directed graph with " << countNodes(g) << " nodes "
+       << "and " << countArcs(g) << " arc." << std::endl;
     
 	sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
 	while (window.isOpen())
