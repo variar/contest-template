@@ -196,7 +196,9 @@ add_custom_target(tbb_def_files DEPENDS tbb.def tbbmalloc.def)
 
 # TBB library
 if (TBB_BUILD_STATIC)
-  add_library(tbb_static STATIC ${tbb_src})
+  add_library(tbb_static STATIC
+                                        "${CMAKE_CURRENT_SOURCE_DIR}/src/pch/stdafx.cpp"
+                                        ${tbb_src})
   set_property(TARGET tbb_static APPEND PROPERTY COMPILE_DEFINITIONS "__TBB_BUILD=1")
   set_property(TARGET tbb_static APPEND_STRING PROPERTY COMPILE_FLAGS ${ENABLE_RTTI})
   install(TARGETS tbb_static ARCHIVE DESTINATION lib)
@@ -209,6 +211,7 @@ if (TBB_BUILD_STATIC)
   endif()
   
   target_include_directories(tbb_static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  set_target_properties(tbb_static PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/src/pch/stdafx.h")
   cotire(tbb_static)
 endif()
 
