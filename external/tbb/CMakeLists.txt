@@ -209,6 +209,8 @@ if (TBB_BUILD_STATIC)
   if (UNIX AND NOT APPLE)
     target_link_libraries(tbb_static PUBLIC pthread dl)
   endif()
+  
+  target_include_directories(tbb_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inlcude)
 endif()
 
 if (TBB_BUILD_SHARED)
