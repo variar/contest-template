@@ -209,10 +209,6 @@ if (TBB_BUILD_STATIC)
   if (UNIX AND NOT APPLE)
     target_link_libraries(tbb_static PUBLIC pthread dl)
   endif()
-  
-  target_include_directories(tbb_static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-  set_target_properties(tbb_static PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/src/pch/stdafx.h")
-  cotire(tbb_static)
 endif()
 
 if (TBB_BUILD_SHARED)
