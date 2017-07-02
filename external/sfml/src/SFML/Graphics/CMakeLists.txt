@@ -4,6 +4,7 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/SFML/Graphics)
 
 # all source files
 set(SRC
+    ${SRCROOT}/stdafx.cpp
     ${SRCROOT}/BlendMode.cpp
     ${INCROOT}/BlendMode.hpp
     ${SRCROOT}/Color.cpp
@@ -163,4 +164,6 @@ sfml_add_library(sfml-graphics
                  SOURCES ${SRC} ${DRAWABLES_SRC} ${RENDER_TEXTURE_SRC} ${STB_SRC}
                  DEPENDS sfml-window sfml-system
                  EXTERNAL_LIBS ${GRAPHICS_EXT_LIBS})
+                 
+set_target_properties(sfml-graphics PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${SRCROOT}/stdafx.h")
 cotire(sfml-graphics)
