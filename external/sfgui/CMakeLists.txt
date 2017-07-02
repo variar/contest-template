@@ -8,7 +8,7 @@ set( SFGUI_REVISION_VERSION 2 )
 ### USER INPUT ###
 
 set( SFGUI_BUILD_SHARED_LIBS true CACHE BOOL "Build shared library." )
-set( SFGUI_BUILD_EXAMPLES true CACHE BOOL "Build examples." )
+set( SFGUI_BUILD_EXAMPLES false CACHE BOOL "Build examples." )
 set( SFGUI_BUILD_DOC false CACHE BOOL "Generate API documentation." )
 set( SFGUI_INCLUDE_FONT true CACHE BOOL "Include default font in library (DejaVuSans)." )
 set( SFML_STATIC_LIBRARIES false CACHE BOOL "Do you want to link SFML statically?" )
