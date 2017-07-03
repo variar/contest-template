@@ -1,9 +1,6 @@
-add_library(dummy_lib STATIC
-	source/dummy.cpp
-)
-
-target_include_directories(dummy_lib
-	PUBLIC "include"
-)
-
-target_link_libraries(dummy_lib PUBLIC Boost::boost)
+contest_add_library(dummy_lib
+                                  SOURCES
+                                    source/dummy.cpp
+                                  LIBS 
+                                    Boost::boost
+                                  TYPES shared;static)
