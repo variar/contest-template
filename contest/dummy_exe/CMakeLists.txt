@@ -1,7 +1,6 @@
 
 contest_add_exe(dummy_exe
     SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/source/main.cpp
     LIBS
         dummy_lib

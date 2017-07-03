@@ -4,7 +4,6 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/SFML/Window)
 
 # all source files
 set(SRC
-    ${SRCROOT}/stdafx.cpp
     ${SRCROOT}/Context.cpp
     ${INCROOT}/Context.hpp
     ${INCROOT}/Export.hpp
@@ -246,6 +245,10 @@ if(SFML_OPENGL_ES)
     endif()
 else()
     list(APPEND WINDOW_EXT_LIBS ${OPENGL_gl_LIBRARY})
+endif()
+
+if(SFML_OS_WINDOWS)
+    list(INSERT ${SRC} 0 "${SRCROOT}/stdafx.cpp")
 endif()
 
 # define the sfml-window target

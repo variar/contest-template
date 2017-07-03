@@ -35,7 +35,6 @@ set( SOURCE_PATH "${PROJECT_SOURCE_DIR}/src" )
 
 set(
 	SOURCES
-	"${SOURCE_PATH}/stdafx.cpp"
 	"${INCLUDE_PATH}/SFGUI/Adjustment.hpp"
 	"${INCLUDE_PATH}/SFGUI/Alignment.hpp"
 	"${INCLUDE_PATH}/SFGUI/Bin.hpp"
@@ -188,6 +187,10 @@ if( SFGUI_INCLUDE_FONT )
 		${SOURCES}
 		"${SOURCE_PATH}/SFGUI/DejaVuSansFont.cpp"
 	)
+endif()
+
+if(WIN32)
+    list(INSERT ${SOURCES} 0 "${SOURCE_PATH}/stdafx.cpp")
 endif()
 
 include_directories( "${INCLUDE_PATH}" )

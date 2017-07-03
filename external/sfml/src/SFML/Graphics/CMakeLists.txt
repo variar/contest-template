@@ -4,7 +4,6 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/SFML/Graphics)
 
 # all source files
 set(SRC
-    ${SRCROOT}/stdafx.cpp
     ${SRCROOT}/BlendMode.cpp
     ${INCROOT}/BlendMode.hpp
     ${SRCROOT}/Color.cpp
@@ -159,6 +158,10 @@ if(SFML_COMPILER_GCC AND BUILD_SHARED_LIBS)
     list(APPEND GRAPHICS_EXT_LIBS "-lgcc_s -lgcc")
  endif()
 
+ if(SFML_OS_WINDOWS)
+    list(INSERT ${SRC} 0 "${SRCROOT}/stdafx.cpp")
+endif()
+ 
 # define the sfml-graphics target
 sfml_add_library(sfml-graphics
                  SOURCES ${SRC} ${DRAWABLES_SRC} ${RENDER_TEXTURE_SRC} ${STB_SRC}

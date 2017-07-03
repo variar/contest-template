@@ -9,12 +9,21 @@ macro(contest_wall target)
     endif()
 endmacro()
 
+macro(contest_stdafx_cpp)
+    if(WIN32)
+        list(INSERT ${sources} 0 ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
+    endif()
+endmacro()
+
 # ex: contest_add_library(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      INCLUDES path1 path2 ...
 #                      LIBS dummy_lib ...)
 macro(contest_add_basic_library target type output)
     cmake_parse_arguments(THIS "" "" "TYPE;SOURCES;INCLUDES;LIBS" ${ARGN})
+    
+    contest_stdafx_cpp(${THIS_SOURCES})
+    
     add_library(${target} ${type}	${THIS_SOURCES})
     generate_export_header(${target} BASE_NAME ${output})
        
@@ -27,6 +36,10 @@ macro(contest_add_basic_library target type output)
     endif()
     
     contest_wall(${target})
+    
+    set_target_properties(${target} PROPERTIES
+        COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h"
+    )
 endmacro()
 
 # ex: contest_add_library(test_exe_name
@@ -77,6 +90,8 @@ endmacro()
 macro(contest_add_exe target)
     cmake_parse_arguments(THIS "" "" "SOURCES;LIBS" ${ARGN})
     
+    contest_stdafx_cpp(${THIS_SOURCES})
+    
     add_executable(${target} ${THIS_SOURCES})
     
     target_include_directories(${target} PRIVATE
@@ -90,7 +105,7 @@ macro(contest_add_exe target)
     contest_wall(${target})
     
     set_target_properties(${target} PROPERTIES
-        COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h"
+        COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h"
     )
 endmacro()
 
