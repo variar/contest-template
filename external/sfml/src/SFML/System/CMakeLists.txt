@@ -99,14 +99,7 @@ if(SFML_OS_ANDROID)
     list(APPEND SYSTEM_EXT_LIBS android log)
 endif()
 
-if(SFML_OS_WINDOWS)
-    list(INSERT ${SRC} 0 "${SRCROOT}/stdafx.cpp")
-endif()
-
 # define the sfml-system target
 sfml_add_library(sfml-system
                  SOURCES ${SRC} ${PLATFORM_SRC}
                  EXTERNAL_LIBS ${SYSTEM_EXT_LIBS})
-                 
-set_target_properties(sfml-system PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${SRCROOT}/stdafx.h")
-cotire(sfml-system)

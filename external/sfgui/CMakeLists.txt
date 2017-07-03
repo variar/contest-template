@@ -190,7 +190,7 @@ if( SFGUI_INCLUDE_FONT )
 endif()
 
 if(WIN32)
-    list(INSERT ${SOURCES} 0 "${SOURCE_PATH}/stdafx.cpp")
+    list(INSERT SOURCES 0 "${SOURCE_PATH}/stdafx.cpp")
 endif()
 
 include_directories( "${INCLUDE_PATH}" )

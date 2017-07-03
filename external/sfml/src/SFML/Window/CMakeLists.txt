@@ -247,15 +247,8 @@ else()
     list(APPEND WINDOW_EXT_LIBS ${OPENGL_gl_LIBRARY})
 endif()
 
-if(SFML_OS_WINDOWS)
-    list(INSERT ${SRC} 0 "${SRCROOT}/stdafx.cpp")
-endif()
-
 # define the sfml-window target
 sfml_add_library(sfml-window
                  SOURCES ${SRC} ${PLATFORM_SRC}
                  DEPENDS sfml-system
                  EXTERNAL_LIBS ${WINDOW_EXT_LIBS})
-                 
-set_target_properties(sfml-window PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${SRCROOT}/stdafx.h")
-cotire(sfml-window)

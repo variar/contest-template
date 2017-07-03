@@ -10,8 +10,20 @@ macro(contest_wall target)
 endmacro()
 
 macro(contest_stdafx_cpp)
-    if(WIN32)
-        list(INSERT ${sources} 0 ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
+     if(WIN32)
+        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
+            message("Found stdafx in ${CMAKE_CURRENT_SOURCE_DIR}/source")
+            list(INSERT THIS_SOURCES 0 ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
+        endif()
+    endif()
+endmacro()
+
+macro(contest_stdafx_h target)
+    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h)
+        message("Found stdafx.h in ${CMAKE_CURRENT_SOURCE_DIR}/source")
+        set_target_properties(${target} PROPERTIES
+            COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h"
+        )
     endif()
 endmacro()
 
@@ -22,7 +34,7 @@ endmacro()
 macro(contest_add_basic_library target type output)
     cmake_parse_arguments(THIS "" "" "TYPE;SOURCES;INCLUDES;LIBS" ${ARGN})
     
-    contest_stdafx_cpp(${THIS_SOURCES})
+    contest_stdafx_cpp()
     
     add_library(${target} ${type}	${THIS_SOURCES})
     generate_export_header(${target} BASE_NAME ${output})
@@ -36,10 +48,8 @@ macro(contest_add_basic_library target type output)
     endif()
     
     contest_wall(${target})
-    
-    set_target_properties(${target} PROPERTIES
-        COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h"
-    )
+    contest_stdafx_h(${target})
+
 endmacro()
 
 # ex: contest_add_library(test_exe_name
@@ -90,7 +100,7 @@ endmacro()
 macro(contest_add_exe target)
     cmake_parse_arguments(THIS "" "" "SOURCES;LIBS" ${ARGN})
     
-    contest_stdafx_cpp(${THIS_SOURCES})
+    contest_stdafx_cpp()
     
     add_executable(${target} ${THIS_SOURCES})
     
@@ -103,10 +113,7 @@ macro(contest_add_exe target)
     endif()
     
     contest_wall(${target})
-    
-    set_target_properties(${target} PROPERTIES
-        COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h"
-    )
+    contest_stdafx_h(${target})
 endmacro()
 
 # ex: contest_add_test(test_exe_name

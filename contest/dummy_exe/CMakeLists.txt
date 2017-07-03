@@ -13,5 +13,4 @@ contest_add_exe(dummy_exe
         lemon
 )
 
-
 cotire(dummy_exe)

@@ -10,6 +10,12 @@ macro(sfml_add_library target)
     # parse the arguments
     cmake_parse_arguments(THIS "" "" "SOURCES;DEPENDS;EXTERNAL_LIBS" ${ARGN})
 
+    if(SFML_OS_WINDOWS)
+        if(EXISTS ${SRCROOT}/stdafx.cpp)
+            list(INSERT THIS_SOURCES 0 "${SRCROOT}/stdafx.cpp")
+        endif()
+    endif()
+    
     # create the target
     add_library(${target} ${THIS_SOURCES})
     target_include_directories(${target} INTERFACE ${PROJECT_SOURCE_DIR}/include) 
@@ -134,6 +140,11 @@ macro(sfml_add_library target)
         target_link_libraries(${target} PUBLIC ${THIS_EXTERNAL_LIBS})
     endif()
 
+    if (EXISTS ${SRCROOT}/stdafx.h)
+        set_target_properties(${target} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${SRCROOT}/stdafx.h")
+        cotire(${target})
+    endif()
+    
     # add the install rule
     install(TARGETS ${target}
             RUNTIME DESTINATION bin COMPONENT bin
