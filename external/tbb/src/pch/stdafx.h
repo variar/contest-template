@@ -1,3 +1,4 @@
+#pragma once
 #pragma GCC system_header
 #ifdef __cplusplus
 #include <algorithm>
