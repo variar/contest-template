@@ -1,4 +1,5 @@
 add_subdirectory(gmock)
+add_subdirectory(catch)
 add_subdirectory(boost-cmake)
 add_subdirectory(tclap)
 add_subdirectory(rapidjson)
