@@ -1,5 +1,14 @@
 include(GenerateExportHeader)
 
+macro(contest_wall target)
+    #see https://lefticus.gitbooks.io/cpp-best-practices/content/02-Use_the_Tools_Available.html
+    if(UNIX)
+        target_compile_options(${target} PRIVATE -Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -pedantic)
+    elseif(WIN32)
+        target_compile_definitions(${target} PRIVATE  /W4 /W44640 /w14265 /we4289 /w14296 /w14640 /w14905 /w14906 /w14928)
+    endif()
+endmacro()
+
 # ex: contest_add_library(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      INCLUDES path1 path2 ...
@@ -8,7 +17,7 @@ macro(contest_add_basic_library target type output)
     cmake_parse_arguments(THIS "" "" "TYPE;SOURCES;INCLUDES;LIBS" ${ARGN})
     add_library(${target} ${type}	${THIS_SOURCES})
     generate_export_header(${target} BASE_NAME ${output})
-    
+       
     if(THIS_INCLUDES)
         target_include_directories(${target} PUBLIC ${THIS_INCLUDES})
     endif()
@@ -17,6 +26,7 @@ macro(contest_add_basic_library target type output)
         target_link_libraries(${target} PUBLIC ${THIS_LIBS})
     endif()
     
+    contest_wall(${target})
 endmacro()
 
 # ex: contest_add_library(test_exe_name
@@ -32,7 +42,7 @@ macro (contest_add_library target)
             ${CMAKE_CURRENT_BINARY_DIR}
             "${CMAKE_CURRENT_SOURCE_DIR}/include")
   
-    if("${THIS_LIB_TYPES}" MATCHES ";static;")
+    if("${THIS_LIB_TYPES}" MATCHES ";static;|;;")
         set(STATIC_TARGET ${target}_static)
         contest_add_basic_library(
             ${STATIC_TARGET} STATIC
@@ -46,7 +56,7 @@ macro (contest_add_library target)
         target_compile_definitions(${STATIC_TARGET} PUBLIC -D${UPPER_TARGET}_DEFINE)
     endif()
     
-    if("${THIS_LIB_TYPES}" MATCHES ";shared;|;;")
+    if("${THIS_LIB_TYPES}" MATCHES ";shared;")
         contest_add_basic_library(
             ${target} SHARED
             ${target}
@@ -63,17 +73,36 @@ endmacro()
 
 # ex: contest_add_test(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
-#                      LIBS catch dummy_lib
-#                      TEST_DATA_DIR data)
-macro (contest_add_test target)
-    cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;TEST_DATA_DIR" ${ARGN})
+#                      LIBS catch dummy_lib ...)
+macro(contest_add_exe target)
+    cmake_parse_arguments(THIS "" "" "SOURCES;LIBS" ${ARGN})
     
     add_executable(${target} ${THIS_SOURCES})
+    
+    target_include_directories(${target} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
     
     if(THIS_LIBS)
         target_link_libraries(${target} PRIVATE ${THIS_LIBS})
     endif()
     
+    contest_wall(${target})
+    
+    set_target_properties(${target} PROPERTIES
+        COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h"
+    )
+endmacro()
+
+# ex: contest_add_test(test_exe_name
+#                      SOURCES sprite.cpp image.cpp ...
+#                      LIBS catch dummy_lib
+#                      TEST_DATA_DIR data)
+macro (contest_add_test target)
+    cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;TEST_DATA_DIR" ${ARGN})
+   
+    contest_add_exe(${target} SOURCES ${THIS_SOURCES} LIBS ${THIS_LIBS})
+   
     if(THIS_TEST_DATA_DIR)
         add_custom_command(
                 TARGET ${target} POST_BUILD
@@ -81,4 +110,6 @@ macro (contest_add_test target)
                 ${CMAKE_CURRENT_SOURCE_DIR}/${THIS_TEST_DATA_DIR} 
                 $<TARGET_FILE_DIR:${target}>/test_data/${target}/${TEST_DATA_DIR})
     endif()
+        
+    add_test(${target} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target})
 endmacro()

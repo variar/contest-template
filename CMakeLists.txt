@@ -49,4 +49,6 @@ set(TBB_BUILD_TBBMALLOC_PROXY OFF)
 
 add_subdirectory(external)
 add_subdirectory(contest)
+
+enable_testing()
 add_subdirectory(tests)

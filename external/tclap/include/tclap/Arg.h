@@ -214,7 +214,7 @@ class Arg
 		 * The char used as a place holder when SwitchArgs are combined.
 		 * Currently set to the bell char (ASCII 7).
 		 */
-		static char blankChar() { return (char)7; }
+		static char blankChar() { return static_cast<char>(7); }
 
 		/**
 		 * The char that indicates the beginning of a flag.  Defaults to '-', but

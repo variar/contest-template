@@ -49,14 +49,16 @@ int main(int argc, char *argv[])
 
     std::vector<mytask> tasks;
     for (int i=0;i<10;++i)
+    {
         tasks.push_back(mytask(i));
-
-        tbb::parallel_for(
+    }
+    
+    tbb::parallel_for(
             tbb::blocked_range<size_t>(0,tasks.size()),
             [&tasks](const tbb::blocked_range<size_t>& r) {
                 for (size_t i=r.begin();i<r.end();++i) tasks[i]();
             }
-        );
+    );
 
      auto f = stlab::async(stlab::default_executor, [] { return 42; });
       // Waiting just for illustrational purpose

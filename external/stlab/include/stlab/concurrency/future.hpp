@@ -281,14 +281,14 @@ struct shared_base<T, enable_if_copyable<T>> : std::enable_shared_from_this<shar
 
     void set_exception(std::exception_ptr error) {
         _error = std::move(error);
-        then_t then;
+        then_t continuation;
         {
             std::unique_lock<std::mutex> lock(_mutex);
-            then = move(_then);
+            continuation = move(_then);
             _ready = true;
         }
         // propagate exception without scheduling
-        for (const auto& e : then) { e.second(); }
+        for (const auto& e : continuation) { e.second(); }
     }
 
     template <typename F, typename... Args>
@@ -450,14 +450,14 @@ struct shared_base<void> : std::enable_shared_from_this<shared_base<void>> {
 
     void set_exception(std::exception_ptr error) {
         _error = std::move(error);
-        then_t then;
+        then_t continuation;
         {
             std::unique_lock<std::mutex> lock(_mutex);
-            then = std::move(_then);
+            continuation = std::move(_then);
             _ready = true;
         }
         // propagate exception without scheduling 
-        for (const auto& e : then) { e.second(); }
+        for (const auto& e : continuation) { e.second(); }
     }
 
     auto get_try() -> bool {
@@ -727,7 +727,7 @@ class future<void, void> {
     }
 
     void detach() const {
-        then([_hold = _p](auto f){ }, [](){ });
+        then([_hold = _p](auto){ }, [](){ });
     }
 
     void reset() {
@@ -921,14 +921,14 @@ auto apply_when_any_arg(const F& f, P& p) {
 template <std::size_t i, typename P, typename T>
 void attach_when_arg_(const std::shared_ptr<P>& p, T a) {
     p->_holds[i] = std::move(a).recover([_w = std::weak_ptr<P>(p)](auto x){
-        auto p = _w.lock(); if (!p) return;
+        auto shared_p = _w.lock(); if (!shared_p) return;
 
         auto error = x.error();
         if (error) {
-            p->failure(*error);
+            shared_p->failure(*error);
         }
         else {
-            p->template done<i>(x);
+            shared_p->template done<i>(x);
         }
     });
 }
@@ -1272,8 +1272,8 @@ auto async(E executor, F&& f, Args&&... args)
         -> future<std::result_of_t<F (Args...)>>
 {
     auto p = package<std::result_of_t<F(Args...)>()>(executor,
-        std::bind([_f = std::forward<F>(f)](Args&... args) {
-            return _f(std::move(args)...);
+        std::bind([_f = std::forward<F>(f)](Args&... args1) {
+            return _f(std::move(args1)...);
         }, std::forward<Args>(args)...));
 
     executor(std::move(p.first));
@@ -1290,13 +1290,13 @@ namespace detail {
 template <typename F, typename... Args>
 void shared_base<void>::set_value(const F& f, Args&&... args) {
     f(std::forward<Args>(args)...);
-    then_t then;
+    then_t continuation;
     {
         std::unique_lock<std::mutex> lock(_mutex);
         _ready = true;
-        then = std::move(_then);
+        continuation = std::move(_then);
     }
-    for (const auto& e : then)
+    for (const auto& e : continuation)
         e.first(e.second);
 }
 
@@ -1326,13 +1326,13 @@ template <typename T>
 template <typename F, typename... Args>
 void shared_base<T, enable_if_copyable<T>>::set_value(const F& f, Args&&... args) {
     _result = f(std::forward<Args>(args)...);
-    then_t then;
+    then_t continuation;
     {
         std::unique_lock<std::mutex> lock(_mutex);
         _ready = true;
-        then = std::move(_then);
+        continuation = std::move(_then);
     }
-    for (const auto& e : then) e.first(e.second);
+    for (const auto& e : continuation) e.first(e.second);
 }
 
 template <typename T>
