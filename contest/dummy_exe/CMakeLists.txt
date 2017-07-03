@@ -8,6 +8,7 @@ contest_add_exe(dummy_exe
         tclap
         Boost::boost
         Boost::program_options
+        tbb_static
         stlab
         lemon
 )

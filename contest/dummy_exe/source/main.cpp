@@ -9,6 +9,9 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <tbb/parallel_for.h>
+#include <tbb/task_scheduler_init.h>
+
 #include <stlab/concurrency/default_executor.hpp>
 #include <stlab/concurrency/future.hpp>
 
@@ -17,6 +20,17 @@
 
 #include <boost/multiprecision/cpp_int.hpp>
 #include <lemon/list_graph.h>
+
+struct mytask {
+  mytask(size_t n)
+    :_n(n)
+  {}
+  void operator()() {
+    for (int i=0;i<10000;++i) {}  // Deliberately run slow
+    std::cerr << "[" << _n << "]";
+  }
+  size_t _n;
+};
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +44,21 @@ int main(int argc, char *argv[])
 	std::cout << "Flag value " << testSwitch.getValue() << std::endl;
 	
 	Dummy d;
+
+    tbb::task_scheduler_init init(tbb::task_scheduler_init::default_num_threads());  // Explicit number of threads
+
+    std::vector<mytask> tasks;
+    for (int i=0;i<10;++i)
+    {
+        tasks.push_back(mytask(i));
+    }
+    
+    tbb::parallel_for(
+            tbb::blocked_range<size_t>(0,tasks.size()),
+            [&tasks](const tbb::blocked_range<size_t>& r) {
+                for (size_t i=r.begin();i<r.end();++i) tasks[i]();
+            }
+    );
 
      auto f = stlab::async(stlab::default_executor, [] { return 42; });
       // Waiting just for illustrational purpose
