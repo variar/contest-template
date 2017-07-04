@@ -3,7 +3,7 @@ contest_add_exe(dummy_exe
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/source/main.cpp
     LIBS
-        dummy_lib
+        dummy_lib_static
         sfgui
         tclap
         Boost::boost

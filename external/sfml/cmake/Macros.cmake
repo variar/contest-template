@@ -141,7 +141,10 @@ macro(sfml_add_library target)
     endif()
 
     if (EXISTS ${SRCROOT}/stdafx.h)
-        set_target_properties(${target} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${SRCROOT}/stdafx.h")
+        set_target_properties(${target} PROPERTIES 
+            COTIRE_CXX_PREFIX_HEADER_INIT "${SRCROOT}/stdafx.h"
+            COTIRE_COTIRE_ADD_UNITY_BUILD FALSE
+        )
         cotire(${target})
     endif()
     

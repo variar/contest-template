@@ -77,6 +77,15 @@ if(NOT BOOST_SOURCE OR NOT EXISTS "${BOOST_SOURCE}")
       OUTPUT_QUIET
     )
     file(RENAME "${EXTRACT_PATH}.tmp" "${EXTRACT_PATH}")
+    
+    message("Boost exact path: ${EXTRACT_PATH}")
+    
+    file(GLOB DELETE_EXAMPLES "${EXTRACT_PATH}/*/libs/*/example")
+    file(GLOB DELETE_TESTS "${EXTRACT_PATH}/*/libs/*/test")
+    
+    file(REMOVE_RECURSE ${DELETE_EXAMPLES})
+    file(REMOVE_RECURSE ${DELETE_TESTS})
+    
   endif()
 
   file(GLOB download_boost_root "${EXTRACT_PATH}/boost_*")

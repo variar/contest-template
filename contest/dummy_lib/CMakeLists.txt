@@ -3,4 +3,5 @@ contest_add_library(dummy_lib
                                     source/dummy.cpp
                                   LIBS 
                                     Boost::boost
-                                  TYPES shared;static)
+                                    pplx
+                                  TYPES static)

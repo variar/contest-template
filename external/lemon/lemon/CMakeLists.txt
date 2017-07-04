@@ -71,6 +71,7 @@ ENDIF()
 
 set_target_properties(lemon PROPERTIES
     COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h"
+    COTIRE_COTIRE_ADD_UNITY_BUILD FALSE
 )
 
 cotire(lemon)

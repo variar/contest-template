@@ -1,40 +1,41 @@
 include(GenerateExportHeader)
 
-macro(contest_wall target)
+function(contest_wall target)
     #see https://lefticus.gitbooks.io/cpp-best-practices/content/02-Use_the_Tools_Available.html
     if(UNIX)
         target_compile_options(${target} PRIVATE -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -pedantic)
     elseif(WIN32)
         target_compile_definitions(${target} PRIVATE  /W4 /W44640 /w14265 /we4289 /w14296 /w14640 /w14905 /w14906 /w14928)
     endif()
-endmacro()
+endfunction()
 
-macro(contest_stdafx_cpp)
+function(contest_stdafx_cpp SOURCES)
      if(WIN32)
         if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
             message("Found stdafx in ${CMAKE_CURRENT_SOURCE_DIR}/source")
-            list(INSERT THIS_SOURCES 0 ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
+            list(INSERT SOURCES 0 ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp PARENT_SCOPE)
         endif()
     endif()
-endmacro()
+endfunction()
 
-macro(contest_stdafx_h target)
+function(contest_stdafx_h target)
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h)
         message("Found stdafx.h in ${CMAKE_CURRENT_SOURCE_DIR}/source")
         set_target_properties(${target} PROPERTIES
             COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h"
+            COTIRE_COTIRE_ADD_UNITY_BUILD FALSE
         )
     endif()
-endmacro()
+endfunction()
 
 # ex: contest_add_library(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      INCLUDES path1 path2 ...
 #                      LIBS dummy_lib ...)
-macro(contest_add_basic_library target type output)
+function(contest_add_basic_library target type output)
     cmake_parse_arguments(THIS "" "" "TYPE;SOURCES;INCLUDES;LIBS" ${ARGN})
     
-    contest_stdafx_cpp()
+    contest_stdafx_cpp(THIS_SOURCES)
     
     add_library(${target} ${type}	${THIS_SOURCES})
     generate_export_header(${target} BASE_NAME ${output})
@@ -50,13 +51,13 @@ macro(contest_add_basic_library target type output)
     contest_wall(${target})
     contest_stdafx_h(${target})
 
-endmacro()
+endfunction()
 
 # ex: contest_add_library(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      LIBS dummy_lib
 #                      TYPES shared;static)
-macro (contest_add_library target)
+function (contest_add_library target)
     cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;TYPES" ${ARGN})
   
     set(THIS_LIB_TYPES ";${THIS_TYPES};")
@@ -92,15 +93,15 @@ macro (contest_add_library target)
 
         target_compile_definitions(${target} PRIVATE -D${target}_EXPORTS)
     endif()
-endmacro()
+endfunction()
 
 # ex: contest_add_test(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      LIBS catch dummy_lib ...)
-macro(contest_add_exe target)
+function(contest_add_exe target)
     cmake_parse_arguments(THIS "" "" "SOURCES;LIBS" ${ARGN})
     
-    contest_stdafx_cpp()
+    contest_stdafx_cpp(THIS_SOURCES)
     
     add_executable(${target} ${THIS_SOURCES})
     
@@ -114,13 +115,13 @@ macro(contest_add_exe target)
     
     contest_wall(${target})
     contest_stdafx_h(${target})
-endmacro()
+endfunction()
 
 # ex: contest_add_test(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      LIBS catch dummy_lib
 #                      TEST_DATA_DIR data)
-macro (contest_add_test target)
+function (contest_add_test target)
     cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;TEST_DATA_DIR" ${ARGN})
    
     contest_add_exe(${target} SOURCES ${THIS_SOURCES} LIBS ${THIS_LIBS})
@@ -134,4 +135,4 @@ macro (contest_add_test target)
     endif()
         
     add_test(${target} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target})
-endmacro()
+endfunction()

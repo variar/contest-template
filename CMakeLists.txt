@@ -52,3 +52,26 @@ add_subdirectory(contest)
 
 enable_testing()
 add_subdirectory(tests)
+
+set(submission_dir submission)
+set(submission_archive submission.tar.gz)
+
+add_custom_command(OUTPUT ${submission_archive}
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${submission_dir}"
+    
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${external_dir}" "${submission_dir}/external"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/contest" "${submission_dir}/contest"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${submission_dir}/tests"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/cmake" "${submission_dir}/cmake"
+    
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/boost-cmake/boost"
+    
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt" "${submission_dir}"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/build.sh" "${submission_dir}"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/Makefile" "${submission_dir}"
+    
+    COMMAND ${CMAKE_COMMAND} -E chdir "${submission_dir}" tar czf "../${submission_archive}" .
+)
+
+add_custom_target(pack_submission DEPENDS ${submission_archive})
