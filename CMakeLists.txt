@@ -42,11 +42,6 @@ set(BOOST_IOSTREAMS_ENABLE_BZIP2 OFF CACHE BOOL "use bzip2")
 set(SFML_BUILD_NETWORK OFF CACHE BOOL "build network")
 set(SFML_BUILD_AUDIO OFF CACHE BOOL "build audio")
 
-set(TBB_BUILD_TESTS OFF)
-set(TBB_BUILD_SHARED OFF)
-set(TBB_BUILD_TBBMALLOC OFF)
-set(TBB_BUILD_TBBMALLOC_PROXY OFF)
-
 add_subdirectory(external)
 add_subdirectory(contest)
 

@@ -8,7 +8,6 @@ add_subdirectory(sfgui)
 add_subdirectory(tbb)
 add_subdirectory(stlab)
 add_subdirectory(lemon)
-add_subdirectory(pplx)
 
 
 
