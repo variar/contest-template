@@ -27,10 +27,9 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export CXX="g++-5"; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export CC="gcc-5"; fi
   
-before_build:
+script:
     - mkdir build
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release 
-script:
     - cmake --build .
     - ctest
