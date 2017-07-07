@@ -54,7 +54,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //LINUX specific definitions & types
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
     #define UTF8_ENCODING
 
     //Text marco, allow to use char automatically
