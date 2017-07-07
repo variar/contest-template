@@ -9,4 +9,7 @@
 #include <list>
 #include <set>
 #include <stack>
+
+#include <logger/logger.hpp>
+
 #endif

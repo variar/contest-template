@@ -11,6 +11,7 @@ contest_add_exe(dummy_exe
         tbb_static
         stlab
         lemon
+        logger_static
 )
 
 cotire(dummy_exe)
