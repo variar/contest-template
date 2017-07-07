@@ -1,6 +1,7 @@
 #pragma once
 
-#include <memory>
+#include <string>
+
 #include <logger_export.h>
 
 namespace logger
