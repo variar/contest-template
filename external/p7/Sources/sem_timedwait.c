@@ -125,7 +125,7 @@
 
 //#include "sem_timedwait.h"
 
-int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout);
+extern int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout);
 
 
 /*  Some useful definitions - TRUE, FALSE, and DEBUG */
