@@ -44,11 +44,13 @@
     #endif
     #include <windows.h>
 
-    //Text marco, allow to use wchar_t automatically
-    #define TM(i_pStr)         L##i_pStr
+    #define UTF8_ENCODING
 
-    #define XCHAR              wchar_t
-    typedef wchar_t            tWCHAR;
+    //Text marco, allow to use wchar_t automatically
+    #define TM(i_pStr)         i_pStr
+
+    #define XCHAR              char
+    typedef short            tWCHAR;
 
     #define P7_EXPORT __declspec(dllexport)
 
@@ -58,7 +60,7 @@
     #define UTF8_ENCODING
 
     //Text marco, allow to use char automatically
-    #define TM(i_pStr)    i_pStr
+    #define TM(i_pStr)   i_pStr
 
     #define XCHAR         char
     typedef short         tWCHAR;

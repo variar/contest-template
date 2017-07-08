@@ -1,5 +1,4 @@
 #include <logger/logger.hpp>
-#include <string>
 
 #include <P7_Trace.h>
 

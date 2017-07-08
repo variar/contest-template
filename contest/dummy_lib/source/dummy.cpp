@@ -2,7 +2,7 @@
 
 #include <boost/any.hpp>
 
-#include <iostream>
+#include <memory>
 
 #include <logger/logger.hpp>
 

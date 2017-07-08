@@ -24,7 +24,12 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <fcntl.h>
+
+#ifndef __APPLE__
 #include <asm/param.h> //HZ macro !
+#else
+#define HZ 100
+#endif
 #include <sched.h>
 
 class CProc

@@ -3,7 +3,7 @@
 #include <dummy/dummy.h>
 #include <tclap/CmdLine.h>
 
-#include <iostream>
+#include <memory>
 
 #include <cmath>
 

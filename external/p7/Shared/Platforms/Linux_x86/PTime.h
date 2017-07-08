@@ -21,6 +21,8 @@
 
 #include <sys/time.h>
 
+#include <chrono>
+
 //time offset from January 1, 1601 to January 1, 1970, resolution 100ns
 #define TIME_OFFSET_1601_1970                            (116444736000000000ULL)
 
@@ -34,10 +36,13 @@
 //GetTickCount
 static __attribute__ ((unused)) tUINT32 GetTickCount()
 {
-    tUINT64 l_qwReturn; //Warn:without initialization !
+    using namespace std::chrono;
+    return static_cast<tUINT32>(duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count());
+    /*
+    UINT64 l_qwReturn; //Warn:without initialization !
     //timeval l_sTime;
     //gettimeofday(&l_sTime, NULL);
-
+    
     struct timespec l_sTime = {0, 0};
     clock_gettime(CLOCK_MONOTONIC, &l_sTime);
     
@@ -46,6 +51,7 @@ static __attribute__ ((unused)) tUINT32 GetTickCount()
     l_qwReturn += l_sTime.tv_nsec/1000000;
     
     return (tUINT32)l_qwReturn;    
+    */
 }//GetTickCount
 
 
@@ -53,6 +59,9 @@ static __attribute__ ((unused)) tUINT32 GetTickCount()
 //GetPerformanceCounter
 static __attribute__ ((unused)) tUINT64 GetPerformanceCounter()
 {
+    using namespace std::chrono;
+    return static_cast<tUINT64>(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count()/100);
+    /*
     tUINT64 l_qwReturn      = 0;
     struct timespec l_sTime = {0, 0};
     
@@ -62,6 +71,7 @@ static __attribute__ ((unused)) tUINT64 GetPerformanceCounter()
     l_qwReturn += (tUINT64)(l_sTime.tv_nsec) / 100;
     
     return l_qwReturn;
+    */
 }//GetPerformanceCounter
 
 
