@@ -31,32 +31,32 @@ set(BOOST_LIBS
   # Compiled libs
   atomic
   chrono
-  container
-  context
-  coroutine
-  date_time
+  #container
+  #context
+  #coroutine
+  #date_time
   exception
-  fiber
+  #fiber
   filesystem
-  graph
-  iostreams
-  locale
-  log
-  math
-  mpi
-  graph_parallel # depends on mpi, so needs to be put after it
+  #graph
+  #iostreams
+  #locale
+  #log
+  #math
+  #mpi
+  #graph_parallel # depends on mpi, so needs to be put after it
   program_options
   #python # complex module
-  random
-  regex
-  serialization
-  signals
+  #random
+  #regex
+  #serialization
+  #signals
   system
-  unit_test_framework
+  #unit_test_framework
   thread
-  timer
-  type_erasure
-  wave
+  #timer
+  #type_erasure
+  #wave
 )
 
 foreach(lib ${BOOST_LIBS})
