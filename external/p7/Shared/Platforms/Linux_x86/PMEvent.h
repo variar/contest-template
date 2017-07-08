@@ -1149,7 +1149,7 @@ public:
         const auto secs = duration_cast<seconds>(now);
         
         l_sTime.tv_sec  =  secs.count();
-        l_sTime.tv_nsec = duration_cast<microseconds>(now - secs).count();
+        l_sTime.tv_nsec = duration_cast<nanoseconds>(now - secs).count();
         
         l_qwNano       += l_sTime.tv_nsec;
         l_sTime.tv_sec += static_cast<time_t>(l_qwNano/1000000000ULL);
