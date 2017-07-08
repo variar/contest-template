@@ -32,20 +32,14 @@
 //Independent
 #include "Common.h"
 
-#include "Socket.h"
-
 #include "PSystem.h"
 
 #include "P7_Client.h"
 //because USER_PACKET_CHANNEL_ID_MAX_SIZE defined in "P7_Client.h".
 
-#include "CRC32.h" //used only in TPackets
-
 #include "TPackets.h"
-#include "PacketsPool.h"
 #include "Client.h"
 
-#include "P7_Telemetry.h"
 #include "P7_Trace.h"
 #include "P7_Extensions.h"
 

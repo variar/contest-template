@@ -69,13 +69,8 @@
 // Default value: Baical
 #define CLIENT_COMMAND_LINE_SINK                               TM("/P7.Sink=")
 
-#define CLIENT_SINK_BAICAL                                     TM("Baical")
-#define CLIENT_SINK_FILE_BIN                                   TM("FileBin")
-#define CLIENT_SINK_FILE_BIN_LEGACY                            TM("File")
 #define CLIENT_SINK_FILE_TXT                                   TM("FileTxt")
 #define CLIENT_SINK_CONSOLE                                    TM("Console")
-#define CLIENT_SINK_SYSLOG                                     TM("Syslog")
-#define CLIENT_SINK_AUTO                                       TM("Auto")
 #define CLIENT_SINK_NULL                                       TM("Null")
 
 

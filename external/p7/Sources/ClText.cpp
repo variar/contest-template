@@ -889,10 +889,6 @@ eClient_Status CClText::Init_Backend(tXCHAR **i_pArgs, tINT32 i_iCount)
         {
             m_pSink = static_cast<CClTextSink *>(new CClTextFile());
         }
-        else if (0 == PStrICmp(l_pSink, CLIENT_SINK_SYSLOG))
-        {
-            m_pSink = static_cast<CClTextSink *>(new CClTextSyslog());
-        }
     }
 
     if (!m_pSink) 

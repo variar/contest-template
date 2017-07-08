@@ -1,15 +1,11 @@
 set(P7_SRC ${CMAKE_CURRENT_SOURCE_DIR}/Sources)
 
 add_library(p7 STATIC 
-    ${P7_SRC}/ClBaical.cpp
-    ${P7_SRC}/ClFile.cpp
     ${P7_SRC}/Client.cpp
     ${P7_SRC}/ClNull.cpp
     ${P7_SRC}/ClText.cpp
-    ${P7_SRC}/CRC32.cpp
-    ${P7_SRC}/Proxy.cpp
-    ${P7_SRC}/Telemetry.cpp
     ${P7_SRC}/Trace.cpp
+    ${P7_SRC}/sem_timedwait.c
 )
 
 target_include_directories(p7 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Headers)

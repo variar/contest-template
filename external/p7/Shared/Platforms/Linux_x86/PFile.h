@@ -29,7 +29,7 @@
 //#include <sys/stat.h>
 //#include <fcntl.h>
 //#include <unistd.h>
-//#include <errno.h>
+#include <errno.h>
 
 //UTF-8 text file header - {0xEF, 0xBB, 0xBF}
 

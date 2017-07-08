@@ -26,7 +26,6 @@
 #include "ClTextSink.h"
 #include "ClTextConsole.h"
 #include "ClTextFile.h"
-#include "ClTextSyslog.h"
 #include "Formatter.h"
 
 ////////////////////////////////////////////////////////////////////////////////

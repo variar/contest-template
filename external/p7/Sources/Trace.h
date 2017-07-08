@@ -516,15 +516,6 @@ public:
                          va_list           *i_pVa_List
                         );
 
-    tBOOL Trace_Managed(tUINT16            i_wTrace_ID,   
-                        eP7Trace_Level     i_eLevel, 
-                        IP7_Trace::hModule i_hModule,
-                        tUINT16            i_wLine,
-                        const tXCHAR      *i_pFile,
-                        const tXCHAR      *i_pFunction,
-                        const tXCHAR      *i_pMessage
-                       );
-
     virtual tINT32 Add_Ref()
     {
         return ATOMIC_INC(&m_lReference);

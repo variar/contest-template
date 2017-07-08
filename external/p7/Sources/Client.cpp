@@ -23,8 +23,6 @@
 #include "CommonClient.h"
 #include "PSignal.h"
 #include "Client.h"
-#include "ClBaical.h"
-#include "ClFile.h"
 #include "ClText.h"
 #include "ClNull.h"
 
@@ -95,40 +93,6 @@ P7_EXPORT IP7_Client * __cdecl P7_Create_Client(const tXCHAR *i_pArgs)
     {
         //OFF
     }
-    else if (    (NULL == l_pSink)
-              || (0 == PStrICmp(l_pSink, CLIENT_SINK_BAICAL))
-            )
-    {
-        l_pReturn = static_cast<IP7_Client *>(new CClBaical(l_pArgs, l_iCount));
-    }
-    else if (    (0 == PStrICmp(l_pSink, CLIENT_SINK_FILE_BIN))
-              || (0 == PStrICmp(l_pSink, CLIENT_SINK_FILE_BIN_LEGACY))
-            )
-    {
-        l_pReturn = static_cast<IP7_Client *>(new CClFile(l_pArgs, l_iCount));
-    }
-    else if (0 == PStrICmp(l_pSink, CLIENT_SINK_AUTO))
-    {
-        CClBaical *l_pBaical = new CClBaical(l_pArgs, l_iCount);
-        if (    (l_pBaical)    
-             && (    (ECLIENT_STATUS_OK != l_pBaical->Get_Status())
-                  || (FALSE == l_pBaical->Connection_Wait(250))
-                )
-           )
-        {
-            delete l_pBaical;
-            l_pBaical = NULL;
-        }
-
-        if (l_pBaical)
-        {
-            l_pReturn = static_cast<IP7_Client *>(l_pBaical);
-        }
-        else
-        {
-            l_pReturn = static_cast<IP7_Client *>(new CClFile(l_pArgs, l_iCount));
-        }
-    }
     else if (0 == PStrICmp(l_pSink, CLIENT_SINK_NULL))
     {
         l_pReturn = static_cast<IP7_Client *>(new CClNull(l_pArgs, l_iCount));
@@ -136,7 +100,6 @@ P7_EXPORT IP7_Client * __cdecl P7_Create_Client(const tXCHAR *i_pArgs)
     else //all other sink are text one
     //(0 == PStrICmp(l_pSink, CLIENT_SINK_FILE_TXT))
     //(0 == PStrICmp(l_pSink, CLIENT_SINK_CONSOLE))
-    //(0 == PStrICmp(l_pSink, CLIENT_SINK_SYSLOG))
     {
         l_pReturn = static_cast<IP7_Client *>(new CClText(l_pArgs, l_iCount));
     }

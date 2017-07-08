@@ -30,8 +30,37 @@
 #define P7_TRACE_H
 
 #include "P7_Client.h"
-#include "P7_Cproxy.h"
 #include <stdarg.h> 
+
+typedef void* hP7_Trace;
+typedef void* hP7_Trace_Module;
+
+////////////////////////////////////////////////////////////////////////////////
+//Trace levels:
+#define  P7_TRACE_LEVEL_TRACE     0
+#define  P7_TRACE_LEVEL_DEBUG     1
+#define  P7_TRACE_LEVEL_INFO      2
+#define  P7_TRACE_LEVEL_WARNING   3
+#define  P7_TRACE_LEVEL_ERROR     4
+#define  P7_TRACE_LEVEL_CRITICAL  5
+
+typedef void* hP7_Client;
+
+typedef tUINT64 (__cdecl *fnGet_Time_Stamp)(void *i_pContext);
+typedef void (__cdecl *fnConnect)(void *i_pContext, tBOOL i_bConnected);
+
+typedef void (__cdecl *fnTrace_Verbosity)(void            *i_pContext, 
+                                          hP7_Trace_Module i_hModule, 
+                                          tUINT32          i_dwVerbosity);
+
+typedef struct 
+{
+    void              *pContext;              //context to be passed back to callbacks 
+    tUINT64            qwTimestamp_Frequency; //count ticks per second, works in cooperation with pTimestamp_Callback 
+    fnGet_Time_Stamp   pTimestamp_Callback;   //callback for getting user timestamps, works in cooperation with qwTimestamp_Frequency 
+    fnTrace_Verbosity  pVerbosity_Callback;   //Callback to notify user when verbosity has been changed
+    fnConnect          pConnect_Callback;     //Callback notifies user when connection with Baical is established/closed
+} stTrace_Conf;
 
 #define TRACE_DEFAULT_SHARED_NAME                                 TM("P7.Trace")
 
@@ -252,21 +281,7 @@ public:
                                  const tXCHAR     **i_ppFormat,
                                  va_list           *i_pVa_List
                                 )                                           = 0;
-
-    ////////////////////////////////////////////////////////////////////////////
-    //Trace_Managed - send trace message
-    //this function is intended for use by MANAGED languages like C#,python, etc
-    //See documentation for details.
-    virtual tBOOL Trace_Managed(tUINT16            i_wTrace_ID,   
-                                eP7Trace_Level     i_eLevel, 
-                                IP7_Trace::hModule i_hModule,
-                                tUINT16            i_wLine,
-                                const tXCHAR      *i_pFile,
-                                const tXCHAR      *i_pFunction,
-                                const tXCHAR      *i_pMessage
-                               )                                            = 0;
 };
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //P7_Create_Trace - function create new instance of IP7_Trace object
