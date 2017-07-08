@@ -5,6 +5,9 @@ os: Visual Studio 2015
 platform:
   - x64
   
+configuration:
+  - Release
+  
 environment:
   CMAKE_GENERATOR_NAME: Visual Studio 14 2015 Win64
   CMAKE_BUILD_TYPE: Release
@@ -12,11 +15,18 @@ environment:
 matrix:
   fast_finish: true
   
-build_script:
+clone_folder: C:\projects\contest
+
+before_build:
+  - cmd: cd C:\projects\contest
   - cmd: md build
   - cmd: cd build
-  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% ..
-  - cmd: cmake --build .
+  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%configuration% ..
   
+build:
+  project: C:\projects\contest\build\contest-template.sln
+  parallel: true
+
 test_script:
-  - cmd: ctest -C %CMAKE_BUILD_TYPE%
+  - cmd: cd C:\projects\contest\build
+  - cmd: ctest --build-config %configuration%
