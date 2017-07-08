@@ -159,11 +159,15 @@ public:
             l_iOffs += l_iRes;
         }
 
-        clock_gettime(CLOCK_MONOTONIC, &l_sTime);
-
+        /*clock_gettime(CLOCK_MONOTONIC, &l_sTime);
+        
         l_qwMSec  = l_sTime.tv_sec;
         l_qwMSec *= 1000;
-        l_qwMSec += l_sTime.tv_nsec/1000000;
+        l_qwMSec += l_sTime.tv_nsec/1000000;*/
+        
+        using namespace std::chrono;
+        l_qwMSec =  static_cast<tUINT64>(duration_cast<microseconds>(high_resolution_clock::now().time_since_epoch()).count());
+
                 
         l_iRes = snprintf(m_pBuffer + l_iOffs, 
                           m_pLength - l_iOffs,

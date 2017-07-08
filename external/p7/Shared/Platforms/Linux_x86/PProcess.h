@@ -601,7 +601,7 @@ public:
     //Get_Processor
     static __forceinline tUINT32 Get_Processor()
     {
-#ifdef __ARM_ARCH_5TEJ__
+#if defined(__ARM_ARCH_5TEJ__) || defined(__APPLE__)
         return 0;        
 #else
         return sched_getcpu();        
