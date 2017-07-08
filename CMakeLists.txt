@@ -43,7 +43,7 @@ set(SFML_BUILD_NETWORK OFF CACHE BOOL "build network")
 set(SFML_BUILD_AUDIO OFF CACHE BOOL "build audio")
 
 add_subdirectory(external)
-add_subdirectory(contest)
+add_subdirectory(templates)
 
 enable_testing()
 add_subdirectory(tests)

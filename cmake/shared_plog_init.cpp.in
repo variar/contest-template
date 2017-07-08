@@ -1,0 +1,9 @@
+#include <${SHARED_PLOG_INIT_TARGET}/log.h>
+
+namespace ${SHARED_PLOG_INIT_TARGET}_log
+{
+    void ${SHARED_PLOG_INIT_EXPORT}_EXPORT initializePlog(plog::Severity severity, plog::IAppender* appender)
+    {
+        plog::init(severity, appender); // Initialize the shared library logger.
+    }
+}

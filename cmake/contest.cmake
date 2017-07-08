@@ -1,5 +1,7 @@
 include(GenerateExportHeader)
 
+set(CONTEST_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})  
+
 function(contest_wall target)
     #see https://lefticus.gitbooks.io/cpp-best-practices/content/02-Use_the_Tools_Available.html
     if(UNIX)
@@ -66,32 +68,56 @@ function (contest_add_library target)
             ${CMAKE_CURRENT_BINARY_DIR}
             "${CMAKE_CURRENT_SOURCE_DIR}/include")
   
+    set(static_target ${target})
+    set(shared_target ${target})
+
+
     if("${THIS_LIB_TYPES}" MATCHES ";static;|;;")
-        set(STATIC_TARGET ${target}_static)
+
+        if("${THIS_LIB_TYPES}" MATCHES ";shared;")
+            set(static_target ${target}_static)
+	endif()
+
         contest_add_basic_library(
-            ${STATIC_TARGET} STATIC
+            ${static_target} STATIC
             ${target}
             SOURCES ${THIS_SOURCES}
             INCLUDES ${THIS_INCLUDE_PATHS}
             LIBS ${THIS_LIBS}
         )
                                                                 
-        string(TOUPPER ${STATIC_TARGET} UPPER_TARGET)
-        target_compile_definitions(${STATIC_TARGET} PUBLIC -D${UPPER_TARGET}_DEFINE)
+        string(TOUPPER ${static_target} UPPER_TARGET)
+        target_compile_definitions(${static_target} PUBLIC -D${UPPER_TARGET}_DEFINE)
     endif()
     
     if("${THIS_LIB_TYPES}" MATCHES ";shared;")
+	    
+        if("${THIS_LIB_TYPES}" MATCHES ";satic;")
+	    set(shared_target ${target}_shared)
+	endif()
+
         contest_add_basic_library(
-            ${target} SHARED
+	    ${shared_target} SHARED
             ${target}
             SOURCES ${THIS_SOURCES}
             INCLUDES ${THIS_INCLUDE_PATHS}
             LIBS ${THIS_LIBS}
         )
-        set_target_properties(${target} PROPERTIES VISIBILITY_INLINES_HIDDEN 1)
-        set_target_properties(${target} PROPERTIES  CXX_VISIBILITY_PRESET hidden)
 
-        target_compile_definitions(${target} PRIVATE -D${target}_EXPORTS)
+        set_target_properties(${shared_target} PROPERTIES VISIBILITY_INLINES_HIDDEN 1)
+        set_target_properties(${shared_target} PROPERTIES  CXX_VISIBILITY_PRESET hidden)
+
+        target_compile_definitions(${shared_target} PRIVATE -D${target}_EXPORTS)
+        
+        
+        set(SHARED_PLOG_INIT_TARGET ${target})
+        string(TOUPPER ${SHARED_PLOG_INIT_TARGET} SHARED_PLOG_INIT_EXPORT)
+        
+        configure_file(${CONTEST_CMAKE_DIR}/shared_plog_init.h.in ${CMAKE_CURRENT_BINARY_DIR}/${target}/log.h)
+        configure_file(${CONTEST_CMAKE_DIR}/shared_plog_init.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/shared_plog_init.cpp)
+
+        target_include_directories(${shared_target} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+        target_sources(${shared_target} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/shared_plog_init.cpp)
     endif()
 endfunction()
 

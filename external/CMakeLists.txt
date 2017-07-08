@@ -7,7 +7,7 @@ add_subdirectory(sfml)
 add_subdirectory(sfgui)
 add_subdirectory(stlab)
 add_subdirectory(lemon)
-add_subdirectory(p7)
+add_subdirectory(plog)
 
 
 

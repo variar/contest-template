@@ -20,11 +20,11 @@ endif()
 
 include_directories(include src src/rml/include ${CMAKE_CURRENT_BINARY_DIR})
 
-option(TBB_BUILD_SHARED          "Build TBB shared library" ON)
+option(TBB_BUILD_SHARED          "Build TBB shared library" OFF)
 option(TBB_BUILD_STATIC          "Build TBB static library" ON)
-option(TBB_BUILD_TBBMALLOC       "Build TBB malloc library" ON)
-option(TBB_BUILD_TBBMALLOC_PROXY "Build TBB malloc proxy library" ON)
-option(TBB_BUILD_TESTS           "Build TBB tests and enable testing infrastructure" ON)
+option(TBB_BUILD_TBBMALLOC       "Build TBB malloc library" OFF)
+option(TBB_BUILD_TBBMALLOC_PROXY "Build TBB malloc proxy library" OFF)
+option(TBB_BUILD_TESTS           "Build TBB tests and enable testing infrastructure" OFF)
 
 if(APPLE)
   set(CMAKE_MACOSX_RPATH ON)
