@@ -9,9 +9,6 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <tbb/parallel_for.h>
-#include <tbb/task_scheduler_init.h>
-
 #include <stlab/concurrency/default_executor.hpp>
 #include <stlab/concurrency/future.hpp>
 
@@ -22,18 +19,6 @@
 #include <lemon/list_graph.h>
 
 #include <logger/logger.hpp>
-
-struct mytask {
-    mytask(size_t n)
-        :_n(n)
-    {}
-    void operator()() {
-        for (int i=0; i<10000; ++i) {} // Deliberately run slow
-        std::cerr << "[" << _n << "]";
-    }
-    size_t _n;
-};
-
 int main(int argc, char *argv[])
 {
     std::unique_ptr<logger::ILogger> logger {logger::createMainLogger()};
@@ -49,22 +34,7 @@ int main(int argc, char *argv[])
 
     Dummy d;
 
-    tbb::task_scheduler_init init(tbb::task_scheduler_init::default_num_threads());  // Explicit number of threads
-
-    std::vector<mytask> tasks;
-    for (int i=0; i<10; ++i)
-    {
-        tasks.push_back(mytask(i));
-    }
-
-    tbb::parallel_for(
-        tbb::blocked_range<size_t>(0,tasks.size()),
-    [&tasks](const tbb::blocked_range<size_t>& r) {
-        for (size_t i=r.begin(); i<r.end(); ++i) tasks[i]();
-    }
-    );
-
-    auto f = stlab::async(stlab::default_executor, [] { return 42; });
+   auto f = stlab::async(stlab::default_executor, [] { return 42; });
     // Waiting just for illustrational purpose
     while (!f.get_try()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
