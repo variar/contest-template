@@ -123,10 +123,7 @@
 #include <sys/fcntl.h>
 #include <setjmp.h>
 
-//#include "sem_timedwait.h"
-
-extern int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout);
-
+#include <mac_sem_timedwait.h>
 
 /*  Some useful definitions - TRUE, FALSE, and DEBUG */
 
@@ -176,7 +173,7 @@ static void timeoutThreadCleanup (void* passedPtr);
  *  This is the main code for the sem_timedwait() implementation.
  */
 
-int sem_timedwait (
+int mac_sem_timedwait (
    sem_t *sem,
    const struct timespec *abs_timeout)
 {

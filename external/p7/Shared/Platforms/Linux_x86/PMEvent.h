@@ -23,14 +23,17 @@
 
 #include <chrono>
 
+#ifdef __APPLE__
+extern "C" {
+    #include "mac_sem_timedwait.h"
+}
+#define sem_timedwait mac_sem_timedwait
+#endif
+
 // Infinite timeout
 #define INFINITE                                                      0xFFFFFFFF  
 
 //#define PMEVENT_COND_VARIABLE
-
-#ifdef __APPLE__
-extern int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout);
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 //CMEvent - class designed to avoid problem of "wait" POSIX functions. They are 
