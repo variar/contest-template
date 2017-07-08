@@ -18,6 +18,7 @@ target_include_directories(p7 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Shared)
 
 if (WIN32)
     target_include_directories(p7 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Shared/Platforms/Windows_x86)
+    target_link_libraries(p7 PUBLIC ws2_32)
 else()
     target_include_directories(p7 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Shared/Platforms/Linux_x86)
     target_link_libraries(p7 INTERFACE pthread rt)

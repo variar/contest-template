@@ -26,7 +26,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <features.h>
+//#include <features.h>
 
 //Linux signal handling article:
 //http://www.linuxprogrammingblog.com/all-about-linux-signals?page=show
