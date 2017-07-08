@@ -7,6 +7,7 @@ platform:
   
 environment:
   CMAKE_GENERATOR_NAME: Visual Studio 14 2015 Win64
+  CMAKE_BUILD_TYPE: Release
 
 matrix:
   fast_finish: true
@@ -14,8 +15,8 @@ matrix:
 build_script:
   - cmd: md build
   - cmd: cd build
-  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=Release ..
-  - cmake --build .
+  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% ..
+  - cmd: cmake --build .
   
 test_script:
-  - ctest
+  - cmd: ctest -C %CMAKE_BUILD_TYPE%
