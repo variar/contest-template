@@ -33,6 +33,11 @@
 
 //UTF-8 text file header - {0xEF, 0xBB, 0xBF}
 
+#if defined(__APPLE__)
+    #define off64_t off_t
+    #define lseek64 lseek
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 class CPFile
     : public IFile //virtual
