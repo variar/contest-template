@@ -8,15 +8,16 @@ endif()
 project(contest-template)
 set (CMAKE_CXX_STANDARD 14)
 
-set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-include(ucm)
-include(cotire)
-include(contest)
-
 set(out_dir "${CMAKE_BINARY_DIR}/output")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${out_dir}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${out_dir}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${out_dir}")
+
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+include(ucm)
+include(cotire)
+include(contest)
 
 set(external_dir ${CMAKE_CURRENT_SOURCE_DIR}/external)
 

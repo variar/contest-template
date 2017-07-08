@@ -160,5 +160,7 @@ function (contest_add_test target)
                 $<TARGET_FILE_DIR:${target}>/test_data/${target}/${TEST_DATA_DIR})
     endif()
         
-    add_test(${target} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target})
+    add_test(NAME run_${target}
+                    COMMAND ${target}
+                     WORKING_DIRECTORY $<TARGET_FILE_DIR:${target}>)
 endfunction()
