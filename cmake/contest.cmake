@@ -143,24 +143,32 @@ function(contest_add_exe target)
     contest_stdafx_h(${target})
 endfunction()
 
+function(contest_add_ui target)
+    if(NOT SUBMISSION_BUILD)
+        contest_add_exe(${target} ${ARGN})
+    endif()
+endfunction()
+
 # ex: contest_add_test(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      LIBS catch dummy_lib
 #                      TEST_DATA_DIR data)
 function (contest_add_test target)
-    cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;TEST_DATA_DIR" ${ARGN})
-   
-    contest_add_exe(${target} SOURCES ${THIS_SOURCES} LIBS ${THIS_LIBS})
-   
-    if(THIS_TEST_DATA_DIR)
-        add_custom_command(
-                TARGET ${target} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${CMAKE_CURRENT_SOURCE_DIR}/${THIS_TEST_DATA_DIR} 
-                $<TARGET_FILE_DIR:${target}>/test_data/${target}/${TEST_DATA_DIR})
+    if(NOT SUBMISSION_BUILD)
+        cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;TEST_DATA_DIR" ${ARGN})
+
+        contest_add_exe(${target} SOURCES ${THIS_SOURCES} LIBS ${THIS_LIBS})
+
+        if(THIS_TEST_DATA_DIR)
+            add_custom_command(
+                    TARGET ${target} POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                    ${CMAKE_CURRENT_SOURCE_DIR}/${THIS_TEST_DATA_DIR}
+                    $<TARGET_FILE_DIR:${target}>/test_data/${target}/${TEST_DATA_DIR})
+        endif()
+
+        add_test(NAME run_${target}
+                        COMMAND ${target}
+                         WORKING_DIRECTORY $<TARGET_FILE_DIR:${target}>)
     endif()
-        
-    add_test(NAME run_${target}
-                    COMMAND ${target}
-                     WORKING_DIRECTORY $<TARGET_FILE_DIR:${target}>)
 endfunction()

@@ -1,5 +1,5 @@
 
-contest_add_exe(ui_exe_template
+contest_add_ui(ui_exe_template
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/source/main.cpp
     LIBS

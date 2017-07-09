@@ -57,11 +57,18 @@ add_custom_command(OUTPUT ${submission_archive}
     COMMAND ${CMAKE_COMMAND} -E make_directory "${submission_dir}"
     
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${external_dir}" "${submission_dir}/external"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/templates" "${submission_dir}/templates"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/contest" "${submission_dir}/contest"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${submission_dir}/tests"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/cmake" "${submission_dir}/cmake"
     
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/boost-cmake/boost"
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/sfgui"
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/sfml"
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/tbb"
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/gtest"
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/catch"
+
     
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt" "${submission_dir}"
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/build.sh" "${submission_dir}"
