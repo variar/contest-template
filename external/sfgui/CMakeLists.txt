@@ -193,11 +193,6 @@ if(WIN32)
     list(INSERT SOURCES 0 "${SOURCE_PATH}/stdafx.cpp")
 endif()
 
-include_directories( "${INCLUDE_PATH}" )
-include_directories( "${SOURCE_PATH}" )
-#include_directories( SYSTEM "${SFML_INCLUDE_DIR}" )
-include_directories( SYSTEM "${PROJECT_SOURCE_DIR}/extlibs/libELL/include" )
-
 # Set the library output directory
 set( LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib" )
 
@@ -214,6 +209,11 @@ else()
 	set_target_properties( sfgui PROPERTIES RELEASE_POSTFIX -s )
 	set_target_properties( sfgui PROPERTIES MINSIZEREL_POSTFIX -s )
 endif()
+
+target_include_directories( sfgui SYSTEM PUBLIC "${INCLUDE_PATH}" )
+target_include_directories( sfgui PRIVATE "${SOURCE_PATH}" )
+#include_directories( SYSTEM "${SFML_INCLUDE_DIR}" )
+target_include_directories( sfgui SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/libELL/include" )
 
 # Tell the compiler to export when necessary.
 set_target_properties( sfgui PROPERTIES DEFINE_SYMBOL SFGUI_EXPORTS )

@@ -12,5 +12,6 @@
 
 #include <plog/Log.h>
 #include <SFML/Graphics.hpp>
+#include <SFGUI/SFGUI.hpp>
 
 #endif

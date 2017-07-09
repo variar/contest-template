@@ -86,9 +86,6 @@ set(RENDER_TEXTURE_SRC
 )
 source_group("render texture" FILES ${RENDER_TEXTURE_SRC})
 
-# stb_image sources
-include_directories("${PROJECT_SOURCE_DIR}/extlibs/headers/stb_image")
-
 # let CMake know about our additional graphics libraries paths
 if(SFML_OS_WINDOWS)
     set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "${PROJECT_SOURCE_DIR}/extlibs/headers/jpeg")
@@ -125,7 +122,6 @@ else()
     find_package(JPEG REQUIRED)
     find_package(Freetype REQUIRED)
 endif()
-include_directories(${FREETYPE_INCLUDE_DIRS} ${JPEG_INCLUDE_DIR})
 
 # build the list of external libraries to link
 if(NOT SFML_OPENGL_ES)
@@ -163,3 +159,14 @@ sfml_add_library(sfml-graphics
                  SOURCES ${SRC} ${DRAWABLES_SRC} ${RENDER_TEXTURE_SRC} ${STB_SRC}
                  DEPENDS sfml-window sfml-system
                  EXTERNAL_LIBS ${GRAPHICS_EXT_LIBS})
+
+ # stb_image sources
+ target_include_directories(sfml-graphics SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/stb_image")
+ target_include_directories(sfml-graphics SYSTEM PRIVATE ${FREETYPE_INCLUDE_DIRS} ${JPEG_INCLUDE_DIR})
+
+ if(NOT SFML_OPENGL_ES)
+     target_include_directories(sfml-graphics SYSTEM PRIVATE ${OPENGL_INCLUDE_DIR})
+ endif()
+ if(SFML_OPENGL_ES AND SFML_OS_LINUX)
+     target_include_directories(sfml-graphics SYSTEM PRIVATE ${EGL_INCLUDE_DIR} ${GLES_INCLUDE_DIR})
+ endif()

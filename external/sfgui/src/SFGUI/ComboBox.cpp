@@ -240,7 +240,7 @@ void ComboBox::HandleMouseMoveEvent( int x, int y ) {
 			}
 		}
 
-		if( ( x > GetAllocation().left ) && ( x < GetAllocation().left + GetAllocation().width ) ) {
+        if( ( static_cast<double>(x) > GetAllocation().left ) && ( static_cast<double>(x) < GetAllocation().left + GetAllocation().width ) ) {
 			float padding( Context::Get().GetEngine().GetProperty<float>( "ItemPadding", shared_from_this() ) );
 			const std::string& font_name( Context::Get().GetEngine().GetProperty<std::string>( "FontName", shared_from_this() ) );
 			unsigned int font_size( Context::Get().GetEngine().GetProperty<unsigned int>( "FontSize", shared_from_this() ) );
