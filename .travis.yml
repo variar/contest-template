@@ -19,8 +19,10 @@ matrix:
             - libjpeg-dev
             - gcc-6
             - g++-6
-      env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6 && SUBMISSION=False"
+        env:
+          - CC=gcc-6
+          - CXX=g++-6
+          - SUBMISSION=True
 
     - os: linux
       compiler: gcc
@@ -32,7 +34,9 @@ matrix:
             - gcc-6
             - g++-6
       env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6 && SUBMISSION=True"
+        - CC=gcc-6
+        - CXX=g++-6
+        - SUBMISSION=True
 
     - os: osx
       compiler: clang
