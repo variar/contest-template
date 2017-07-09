@@ -19,7 +19,7 @@ matrix:
             - libjpeg-dev
             - gcc-6
             - g++-6
-      env: CC=gcc-6 CXX=g++-6 SUBMISSION=False
+      env: GCC_VERSION=6 SUBMISSION=False
 
     - os: linux
       compiler: gcc
@@ -30,14 +30,19 @@ matrix:
           packages:
             - gcc-6
             - g++-6
-      env: CC=gcc-6 CXX=g++-6 SUBMISSION=True
+      env: GCC_VERSION=6 SUBMISSION=True
 
     - os: osx
       compiler: clang
+      env: SUBMISSION=False
+
+install:
+  - if [[ -n "$GCC_VERSION" ]]; then export CXX=g++-$GCC_VERSION CC=gcc-$GCC_VERSION; fi
+  - if [[ -n "$SUBMISSION" ]]; then export SUBMISSION_BUILD=$SUBMISSION; fi
 
 script:
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DSUBMISSION_BUILD=$SUBMISSION
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DSUBMISSION_BUILD=$SUBMISSION_BUILD
     - cmake --build .
     - ctest
