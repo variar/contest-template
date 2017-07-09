@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     ListDigraph g;
     ListDigraph::Node u = g.addNode();
     ListDigraph::Node v = g.addNode();
-    ListDigraph::Arc  a = g.addArc(u, v);
+    g.addArc(u, v);
     LOG_INFO <<  "Hello World! This is LEMON library here.";
 
     return 0;
