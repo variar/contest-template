@@ -17,9 +17,9 @@ matrix:
             - libflac-dev
             - libfreetype6-dev
             - libjpeg-dev
-            - gcc-6
-            - g++-6
-      env: GCC_VERSION=6 SUBMISSION=False
+            - gcc-7
+            - g++-7
+      env: GCC_VERSION=7 SUBMISSION=False
 
     - os: linux
       compiler: gcc
@@ -28,9 +28,9 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - gcc-6
-            - g++-6
-      env: GCC_VERSION=6 SUBMISSION=True
+            - gcc-7
+            - g++-7
+      env: GCC_VERSION=7 SUBMISSION=True
 
     - os: osx
       compiler: clang
