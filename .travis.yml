@@ -17,19 +17,29 @@ matrix:
             - libflac-dev
             - libfreetype6-dev
             - libjpeg-dev
-            - gcc-5
-            - g++-5
+            - gcc-6
+            - g++-6
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6 && SUBMISSION=False"
+
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-6
+            - g++-6
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6 && SUBMISSION=True"
 
     - os: osx
       compiler: clang
 
-install:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export CXX="g++-5"; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export CC="gcc-5"; fi
-  
 script:
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release 
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DSUBMISSION_BUILD=$SUBMISSION
     - cmake --build .
     - ctest
