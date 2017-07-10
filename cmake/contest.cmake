@@ -177,8 +177,6 @@ function (contest_add_test target)
 
         contest_add_exe(${target} SOURCES ${THIS_SOURCES} LIBS ${THIS_LIBS})
 
-        contest_exclude_from_submission_build(${target})
-
         if(THIS_TEST_DATA_DIR)
             add_custom_command(
                     TARGET ${target} POST_BUILD
