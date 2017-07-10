@@ -30,16 +30,37 @@ function(contest_stdafx_h target)
     endif()
 endfunction()
 
+function(contest_exclude_from_submission_build target)
+    if(SUBMISSION_BUILD)
+        set_target_properties(${target} PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+    endif()
+endfunction()
+
+function(check_ui_linking libs features)
+    if (";${libs};" MATCHES ";sfml;|;sfgui;")
+        if (NOT ";${features};" MATCHES ";ui;" )
+            message(FATAL_ERROR "Should use contest_add_ui_xxx if linking to sfml or sfgui. This target will not go to submission build")
+        endif()
+    else()
+        if (";${features};" MATCHES ";ui;" )
+            message(FATAL_ERROR "Should not use contest_add_ui_xxx if not linking to sfml or sfgui. This target will not go to submission build")
+        endif()
+    endif()
+endfunction()
+
 # ex: contest_add_library(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      INCLUDES path1 path2 ...
 #                      LIBS dummy_lib ...)
 function(contest_add_basic_library target type output)
-    cmake_parse_arguments(THIS "" "" "TYPE;SOURCES;INCLUDES;LIBS" ${ARGN})
+    cmake_parse_arguments(THIS "" "" "TYPE;SOURCES;INCLUDES;LIBS;USE_FEATURES" ${ARGN})
     
     contest_stdafx_cpp(THIS_SOURCES)
     
+    check_ui_linking("${THIS_LIBS}" "${THIS_USE_FEATURES}")
+
     add_library(${target} ${type}	${THIS_SOURCES})
+
     generate_export_header(${target} BASE_NAME ${output})
        
     if(THIS_INCLUDES)
@@ -55,29 +76,13 @@ function(contest_add_basic_library target type output)
 
 endfunction()
 
-function(check_ui_linking libs features)
-    if (";${libs};" MATCHES ";sfml;|;sfgui;")
-        if (NOT ";${features};" MATCHES ";ui;" )
-            message(FATAL_ERROR "Should use contest_add_ui_xxx if linking to sfml or sfgui. This target will not go to submission build")
-        endif()
-    else()
-        if (";${features};" MATCHES ";ui;" )
-            message(FATAL_ERROR "Should not use contest_add_ui_xxx if not linking to sfml or sfgui. This target will not go to submission build")
-        endif()
-    endif()
-
-endfunction()
-
 # ex: contest_add_library(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      LIBS dummy_lib
-#                      TYPES shared;static
-#                      USE_FEATURES ui)
+#                      TYPES shared;static)
 function (contest_add_library target)
     cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;TYPES;USE_FEATURES" ${ARGN})
   
-    check_ui_linking("${THIS_LIBS}" "${THIS_USE_FEATURES}")
-
     set(THIS_LIB_TYPES ";${THIS_TYPES};")
   
     set(THIS_INCLUDE_PATHS 
@@ -100,6 +105,7 @@ function (contest_add_library target)
             SOURCES ${THIS_SOURCES}
             INCLUDES ${THIS_INCLUDE_PATHS}
             LIBS ${THIS_LIBS}
+            USE_FEATURES ${THIS_USE_FEATURES}
         )
                                                                 
         string(TOUPPER ${static_target} UPPER_TARGET)
@@ -118,6 +124,7 @@ function (contest_add_library target)
             SOURCES ${THIS_SOURCES}
             INCLUDES ${THIS_INCLUDE_PATHS}
             LIBS ${THIS_LIBS}
+            USE_FEATURES ${THIS_USE_FEATURES}
         )
 
         set_target_properties(${shared_target} PROPERTIES VISIBILITY_INLINES_HIDDEN 1)
@@ -137,15 +144,6 @@ function (contest_add_library target)
     endif()
 endfunction()
 
-function(contest_add_ui_library target)
-    contest_add_library(${target} ${ARGN} USE_FEATURES ui)
-
-    if(SUBMISSION_BUILD)
-        set_target_properties(${target} PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
-    endif()
-
-endfunction()
-
 # ex: contest_add_test(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      LIBS catch dummy_lib ...)
@@ -153,7 +151,6 @@ function(contest_add_exe target)
     cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;USE_FEATURES" ${ARGN})
     
     check_ui_linking("${THIS_LIBS}" "${THIS_USE_FEATURES}")
-
 
     contest_stdafx_cpp(THIS_SOURCES)
     
@@ -171,13 +168,6 @@ function(contest_add_exe target)
     contest_stdafx_h(${target})
 endfunction()
 
-function(contest_add_ui_exe target)
-    contest_add_exe(${target} ${ARGN} USE_FEATURES ui)
-    if(SUBMISSION_BUILD)
-        set_target_properties(${target} PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
-    endif()
-endfunction()
-
 # ex: contest_add_test(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      LIBS catch dummy_lib
@@ -186,6 +176,8 @@ function (contest_add_test target)
         cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;TEST_DATA_DIR" ${ARGN})
 
         contest_add_exe(${target} SOURCES ${THIS_SOURCES} LIBS ${THIS_LIBS})
+
+        contest_exclude_from_submission_build(${target})
 
         if(THIS_TEST_DATA_DIR)
             add_custom_command(
@@ -198,4 +190,16 @@ function (contest_add_test target)
         add_test(NAME run_${target}
                         COMMAND ${target}
                          WORKING_DIRECTORY $<TARGET_FILE_DIR:${target}>)
+endfunction()
+
+function(contest_add_ui_exe target)
+    if (NOT SUBMISSION_BUILD)
+        contest_add_exe(${target} ${ARGN} USE_FEATURES ui)
+    endif()
+endfunction()
+
+function(contest_add_ui_library target)
+    if(NOT SUBMISSION_BUILD)
+        contest_add_library(${target} ${ARGN} USE_FEATURES ui)
+    endif()
 endfunction()

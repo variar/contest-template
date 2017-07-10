@@ -6,10 +6,10 @@ add_subdirectory(stlab)
 add_subdirectory(lemon)
 add_subdirectory(plog)
 
-if(NOT SUBMISSION_BUILD)
-    add_subdirectory(gtest)
-    add_subdirectory(catch)
+add_subdirectory(gtest)
+add_subdirectory(catch)
 
+if(NOT SUBMISSION_BUILD)
     add_subdirectory(sfml)
     add_subdirectory(sfgui)
 endif()

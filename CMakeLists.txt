@@ -73,3 +73,5 @@ add_custom_command(OUTPUT ${submission_archive}
 )
 
 add_custom_target(pack_submission DEPENDS ${submission_archive})
+
+add_custom_target(build_submission DEPENDS exe_template)
