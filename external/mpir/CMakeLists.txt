@@ -2,15 +2,6 @@ project (mpir-generic C)
 
 cmake_minimum_required (VERSION 2.8.6)
 
-include_directories("./")
-include_directories("./fft")
-include_directories("./mpf")
-include_directories("./mpq")
-include_directories("./mpn/generic")
-include_directories("./mpz")
-include_directories("./printf")
-include_directories("./scanf")
-
 file(
 	GLOB mpir_SRC
 	"./*.h"
@@ -24,11 +15,6 @@ file(
 	"./scanf/*.c"
 )
 
-file(
-	GLOB public_headers
-	"./*.h"
-)
-
 add_definitions(-DHAVE_CONFIG_H)
 add_definitions(-D_LIB)
 if(WIN32)
@@ -37,6 +23,14 @@ endif()
 
 add_library(mpir STATIC ${mpir_SRC})
 
-target_include_directories(mpir INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(mpir PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(mpir PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/fft
+        ${CMAKE_CURRENT_SOURCE_DIR}/mpf
+        ${CMAKE_CURRENT_SOURCE_DIR}/mpq
+        ${CMAKE_CURRENT_SOURCE_DIR}/mpn/generic
+        ${CMAKE_CURRENT_SOURCE_DIR}/mpz
+        ${CMAKE_CURRENT_SOURCE_DIR}/printf
+        ${CMAKE_CURRENT_SOURCE_DIR}/scanf)
 
 
