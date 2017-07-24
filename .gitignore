@@ -85,6 +85,7 @@ CMakeLists.txt.user*
 
 #JetBrains
 **/.idea/
+**/cmake-build-*
 
 #KDE
 **/.kdev4/

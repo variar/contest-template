@@ -9,6 +9,7 @@ contest_add_exe(exe_template
         stlab
         lemon
         plog
+        gsl
 )
 
 cotire(exe_template)

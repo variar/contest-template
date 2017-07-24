@@ -10,6 +10,8 @@
 
 #include <plog/Appenders/ConsoleAppender.h>
 
+#include <gsl/gsl_util.h>
+
 int main(int argc, char *argv[])
 {
     plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
@@ -39,6 +41,10 @@ int main(int argc, char *argv[])
     }
 
     std::cout << "The answer is " << f.get_try().value() << "\n";
+
+    {
+        auto guard = gsl::finally([]() { LOG_INFO << "guard done"; });
+    }
 
     using namespace lemon;
     ListDigraph g;
