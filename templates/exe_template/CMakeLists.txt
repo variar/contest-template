@@ -10,6 +10,7 @@ contest_add_exe(exe_template
         lemon
         plog
         gsl
+        mpir
 )
 
 cotire(exe_template)

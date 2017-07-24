@@ -12,6 +12,10 @@
 
 #include <gsl/gsl_util.h>
 
+#include <mpir.h>
+#include <boost/multiprecision/gmp.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
+
 int main(int argc, char *argv[])
 {
     plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
@@ -26,21 +30,38 @@ int main(int argc, char *argv[])
 
     Dummy d;
 
-   auto f = stlab::async(stlab::default_executor, [] 
+   auto f_mpir = stlab::async(stlab::default_executor, []
     { 
-        LOG_INFO << "Logging from async";
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-        LOG_INFO << "Async done";
+        using namespace boost::multiprecision;
+        mpq_rational v = 1;
 
-        return 42; 
+        LOG_INFO << "MPIR start";
+        // Do some arithmetic:
+        for(unsigned i = 1; i <= 10000; ++i)
+            v *= i;
+
+        LOG_INFO << "MPIR done";
     });
-   
+
+    auto f_boost = f_mpir.then(stlab::default_executor,[] {
+        using namespace boost::multiprecision;
+        cpp_rational v = 1;
+
+        LOG_INFO << "BOOST start";
+        // Do some arithmetic:
+        for (unsigned i = 1; i <= 10000; ++i)
+            v *= i;
+
+        LOG_INFO << "BOOST done"; // prints 1000!
+        return 42;
+    });
+
     // Waiting just for illustrational purpose
-    while (!f.get_try()) {
+    while (!f_boost.get_try()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    std::cout << "The answer is " << f.get_try().value() << "\n";
+    std::cout << "The answer is " << f_boost.get_try().value() << "\n";
 
     {
         auto guard = gsl::finally([]() { LOG_INFO << "guard done"; });
