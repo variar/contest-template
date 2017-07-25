@@ -23,7 +23,7 @@ endif()
 
 add_library(mpir STATIC ${mpir_SRC})
 
-target_include_directories(mpir PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(mpir SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(mpir PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/fft
         ${CMAKE_CURRENT_SOURCE_DIR}/mpf
