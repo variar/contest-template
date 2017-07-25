@@ -1,8 +1,17 @@
-add_library(stacktrace INTERFACE)
-target_include_directories(stacktrace SYSTEM INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+if(WIN32)
+    set(STACKTRACE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/windbg.cpp)
+else()
+    set(STACKTRACE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/basic.cpp)
+endif()
+
+add_library(stacktrace STATIC ${STACKTRACE_SRC} ${CMAKE_CURRENT_SOURCE_DIR}/src/crash_tracer.cpp)
+target_include_directories(stacktrace SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+target_link_libraries(stacktrace PUBLIC Boost_filesystem)
+
 if(WIN32)
     target_compile_definitions(stacktrace INTERFACE BOOST_STACKTRACE_USE_WINDBG=1)
-    target_link_libraries(stacktrace INTERFACE dbgeng ole32)
+    target_link_libraries(stacktrace PUBLIC dbgeng ole32)
 else()
-    target_link_libraries(stacktrace INTERFACE dl)
+    target_link_libraries(stacktrace PUBLIC dl)
 endif()

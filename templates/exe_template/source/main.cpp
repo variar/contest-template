@@ -16,19 +16,27 @@
 #include <boost/multiprecision/gmp.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 
-#include <boost/stacktrace.hpp>
+#include <crash_handler/crash_tracer.h>
 
 int main(int argc, char *argv[])
 {
+    CrashTracer crashTracer;
+
     plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init(plog::debug, &consoleAppender);
     
     TCLAP::CmdLine cmdLine {"dummy program to test externals", '=', "2016.8"};
 
-    TCLAP::SwitchArg testSwitch {"t","test","test switch", false};
-    cmdLine.add(testSwitch);
+    TCLAP::SwitchArg crashSwitch {"c","crash","crash switch", false};
+    cmdLine.add(crashSwitch);
 
     cmdLine.parse(argc, argv);
+
+    if (crashSwitch.getValue())
+    {
+        int* a = nullptr;
+        *a = 0;
+    }
 
     Dummy d;
 
@@ -55,9 +63,6 @@ int main(int argc, char *argv[])
             v *= i;
 
         LOG_INFO << "BOOST done"; // prints 1000!
-
-        LOG_INFO << boost::stacktrace::stacktrace();
-
         return 42;
     });
 
