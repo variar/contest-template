@@ -15,3 +15,5 @@ if(WIN32)
 else()
     target_link_libraries(stacktrace PUBLIC dl)
 endif()
+
+set_target_properties(stacktrace PROPERTIES FOLDER "external")

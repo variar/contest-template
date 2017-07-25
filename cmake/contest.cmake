@@ -74,6 +74,7 @@ function(contest_add_basic_library target type output)
     contest_wall(${target})
     contest_stdafx_h(${target})
 
+    set_target_properties(${target} PROPERTIES FOLDER "contest")
 endfunction()
 
 # ex: contest_add_library(test_exe_name
@@ -166,6 +167,8 @@ function(contest_add_exe target)
     
     contest_wall(${target})
     contest_stdafx_h(${target})
+
+    set_target_properties(${target} PROPERTIES FOLDER "contest")
 endfunction()
 
 # ex: contest_add_test(test_exe_name
@@ -176,6 +179,7 @@ function (contest_add_test target)
         cmake_parse_arguments(THIS "" "" "SOURCES;LIBS;TEST_DATA_DIR" ${ARGN})
 
         contest_add_exe(${target} SOURCES ${THIS_SOURCES} LIBS ${THIS_LIBS})
+        set_target_properties(${target} PROPERTIES FOLDER "tests")
 
         if(THIS_TEST_DATA_DIR)
             add_custom_command(

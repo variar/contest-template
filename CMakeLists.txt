@@ -15,6 +15,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${out_dir}")
 
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 include(ucm)
 include(cotire)
 include(contest)

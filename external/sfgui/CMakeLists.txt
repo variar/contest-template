@@ -331,5 +331,6 @@ install(
 set_target_properties(sfgui PROPERTIES 
     COTIRE_CXX_PREFIX_HEADER_INIT "${SOURCE_PATH}/stdafx.h"
     COTIRE_COTIRE_ADD_UNITY_BUILD FALSE
+	FOLDER "SFML"
 )
 cotire(sfgui)

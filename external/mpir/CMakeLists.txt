@@ -33,4 +33,5 @@ target_include_directories(mpir PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/printf
         ${CMAKE_CURRENT_SOURCE_DIR}/scanf)
 
+set_target_properties(mpir PROPERTIES FOLDER "external")
 
