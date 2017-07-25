@@ -16,6 +16,8 @@
 #include <boost/multiprecision/gmp.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 
+#include <boost/stacktrace.hpp>
+
 int main(int argc, char *argv[])
 {
     plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
@@ -53,6 +55,9 @@ int main(int argc, char *argv[])
             v *= i;
 
         LOG_INFO << "BOOST done"; // prints 1000!
+
+        LOG_INFO << boost::stacktrace::stacktrace();
+
         return 42;
     });
 

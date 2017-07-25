@@ -10,6 +10,7 @@ add_subdirectory(gsl)
 add_subdirectory(gtest)
 add_subdirectory(catch)
 add_subdirectory(mpir)
+add_subdirectory(stacktrace)
 
 if(NOT SUBMISSION_BUILD)
     add_subdirectory(sfml)

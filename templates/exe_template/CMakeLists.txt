@@ -11,6 +11,7 @@ contest_add_exe(exe_template
         plog
         gsl
         mpir
+        stacktrace
 )
 
 cotire(exe_template)

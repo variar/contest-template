@@ -4,4 +4,5 @@ contest_add_library(dll_template
                                   LIBS 
                                     Boost::boost
                                     plog
+                                    stacktrace
                                   TYPES shared)
