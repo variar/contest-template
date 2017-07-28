@@ -205,3 +205,45 @@ function(contest_add_ui_library target)
         contest_add_library(${target} ${ARGN} USE_FEATURES ui)
     endif()
 endfunction()
+
+function(contest_add_submission submission_dir submission_archive submission_target submission_exe_name)
+
+    set(clean_source_archive submission_source.tar.gz)
+
+    set(prepare_clean_source_commands
+            COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}"
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${submission_dir}"
+
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/external" "${submission_dir}/external"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/templates" "${submission_dir}/templates"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/contest" "${submission_dir}/contest"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${submission_dir}/tests"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/cmake" "${submission_dir}/cmake"
+
+            COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/boost-cmake/boost"
+            COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/tbb"
+
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt" "${submission_dir}"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/build.sh" "${submission_dir}"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/Makefile" "${submission_dir}"
+    )
+
+    add_custom_command(OUTPUT ${submission_archive}
+            ${prepare_clean_source_commands}
+
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${submission_target}>" "${submission_dir}/${submission_exe_name}"
+            COMMAND ${CMAKE_COMMAND} -E chdir "${submission_dir}" tar czf "../${submission_archive}" .
+    )
+
+    add_custom_command(OUTPUT ${clean_source_archive}
+            ${prepare_clean_source_commands}
+            COMMAND ${CMAKE_COMMAND} -E chdir "${submission_dir}" tar czf "../${clean_source_archive}" .
+    )
+
+
+    add_custom_target(build_submission DEPENDS ${submission_target})
+    add_custom_target(pack_submission DEPENDS build_submission ${submission_archive})
+
+    add_custom_target(pack_clean_sources DEPENDS ${clean_source_archive})
+
+endfunction()

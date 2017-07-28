@@ -21,8 +21,6 @@ include(ucm)
 include(cotire)
 include(contest)
 
-set(external_dir ${CMAKE_CURRENT_SOURCE_DIR}/external)
-
 if(WIN32)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
@@ -31,10 +29,9 @@ if (UNIX)
     ucm_add_flags(-pthread)
     ucm_add_flags(CXX -fexceptions  -ftemplate-backtrace-limit=0)
     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-    ucm_add_flags(CXX -Wall)
 endif()
 
- if(APPLE)
+if(APPLE)
         ucm_add_flags(-I/opt/X11/include)
         ucm_add_linker_flags(EXE -L/opt/X11/lib -lglut)
 endif()
@@ -51,29 +48,6 @@ add_subdirectory(templates)
 enable_testing()
 add_subdirectory(tests)
 
-set(submission_dir submission)
-set(submission_archive submission.tar.gz)
+contest_add_submission(submission submission.tar.gz exe_template submission_exe)
 
-add_custom_command(OUTPUT ${submission_archive}
-    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${submission_dir}"
-    
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${external_dir}" "${submission_dir}/external"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/templates" "${submission_dir}/templates"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/contest" "${submission_dir}/contest"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${submission_dir}/tests"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/cmake" "${submission_dir}/cmake"
-    
-    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/boost-cmake/boost"
-    COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/tbb"
-    
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt" "${submission_dir}"
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/build.sh" "${submission_dir}"
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/Makefile" "${submission_dir}"
-    
-    COMMAND ${CMAKE_COMMAND} -E chdir "${submission_dir}" tar czf "../${submission_archive}" .
-)
 
-add_custom_target(pack_submission DEPENDS ${submission_archive})
-
-add_custom_target(build_submission DEPENDS exe_template)
