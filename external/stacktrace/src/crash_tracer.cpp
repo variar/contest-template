@@ -1,5 +1,7 @@
 #include <crash_handler/crash_tracer.h>
 
+#define BOOST_STACKTRACE_LINK
+
 #include <signal.h>
 
 #include <boost/stacktrace.hpp>
