@@ -1,6 +1,7 @@
 add_subdirectory(boost-cmake)
 add_subdirectory(tclap)
 add_subdirectory(rapidjson)
+add_subdirectory(seqan)
 
 add_subdirectory(stlab)
 add_subdirectory(lemon)
