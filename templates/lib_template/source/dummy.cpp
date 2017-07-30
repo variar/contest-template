@@ -9,8 +9,10 @@
 #include <mpir.h>
 #include <boost/multiprecision/gmp.hpp>
 
+#include <sstream>
+
 namespace boost_mp = boost::multiprecision;
-using rational = boost_mp::number<boost_mp::backends::gmp_int,
+using int_type = boost_mp::number<boost_mp::backends::gmp_int,
                                   boost_mp::expression_template_option::et_off>;
 
 
@@ -31,15 +33,17 @@ Dummy::Dummy()
     TGraph g;
     addEdges(g, edges, numEdges);
     // Print graph.
-    LOG_INFO << g;
+    std::stringstream gs;
+    gs << g;
+    LOG_INFO << gs.str();
 
     // Fill external property map with edge weights and assign to graph.
-    rational weights[] = {3, 8, -4, 1, 7, 4, 2, -5, 6};
-    String<rational > weightMap;
+    int_type weights[] = {3, 8, -4, 1, 7, 4, 2, -5, 6};
+    String<int_type> weightMap;
     assignEdgeMap(weightMap, g, weights);
 
     // Run Floyd-Warshall algorithm.
-    String<rational > distMat;
+    String<int_type> distMat;
     String<TVertexDescriptor> predMat;
     floydWarshallAlgorithm(distMat, predMat, g, weightMap);
 
@@ -48,8 +52,10 @@ Dummy::Dummy()
     for (TSize row = 0; row < len; ++row)
         for (TSize col = 0; col < len; ++col)
         {
-            LOG_INFO << row << "," << col << " (Distance="
-                      << getValue(distMat, row * len + col) << "): ";
+            std::stringstream s;
+            s << row << "," << col << " (Distance="
+                 <<  getValue(distMat, row * len + col) << "): ";
+            LOG_INFO << s.str();
         }
 
 
