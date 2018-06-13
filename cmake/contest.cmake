@@ -5,20 +5,20 @@ set(CONTEST_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})
 function(contest_wall target)
     #see https://lefticus.gitbooks.io/cpp-best-practices/content/02-Use_the_Tools_Available.html
     if(UNIX)
-        target_compile_options(${target} PRIVATE -Werror -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -pedantic)
+        target_compile_options(${target} PRIVATE -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Wno-unused-parameter -Wno-unused-variable)
     elseif(WIN32)
         target_compile_definitions(${target} PRIVATE  /W4 /W44640 /w14265 /we4289 /w14296 /w14640 /w14905 /w14906 /w14928)
     endif()
 endfunction()
 
-function(contest_stdafx_cpp SOURCES)
+macro(contest_stdafx_cpp)
      if(WIN32)
         if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
             message("Found stdafx in ${CMAKE_CURRENT_SOURCE_DIR}/source")
-            list(INSERT SOURCES 0 ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp PARENT_SCOPE)
+            list(INSERT THIS_SOURCES 0 ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
         endif()
     endif()
-endfunction()
+endmacro()
 
 function(contest_stdafx_h target)
     if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h)
@@ -55,7 +55,7 @@ endfunction()
 function(contest_add_basic_library target type output)
     cmake_parse_arguments(THIS "" "" "TYPE;SOURCES;INCLUDES;LIBS;USE_FEATURES" ${ARGN})
     
-    contest_stdafx_cpp(THIS_SOURCES)
+    contest_stdafx_cpp()
     
     check_ui_linking("${THIS_LIBS}" "${THIS_USE_FEATURES}")
 
@@ -153,8 +153,8 @@ function(contest_add_exe target)
     
     check_ui_linking("${THIS_LIBS}" "${THIS_USE_FEATURES}")
 
-    contest_stdafx_cpp(THIS_SOURCES)
-    
+    contest_stdafx_cpp()
+
     add_executable(${target} ${THIS_SOURCES})
     
     target_include_directories(${target} PRIVATE
@@ -209,27 +209,31 @@ endfunction()
 function(contest_add_submission submission_dir submission_archive submission_target submission_exe_name)
 
     set(clean_source_archive submission_source.tar.gz)
-
+    set(submission_src_dir ${submission_dir}/src)
     set(prepare_clean_source_commands
             COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}"
             COMMAND ${CMAKE_COMMAND} -E make_directory "${submission_dir}"
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${submission_src_dir}"
 
-            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/external" "${submission_dir}/external"
-            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/templates" "${submission_dir}/templates"
-            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/contest" "${submission_dir}/contest"
-            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${submission_dir}/tests"
-            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/cmake" "${submission_dir}/cmake"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/external" "${submission_src_dir}/external"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/templates" "${submission_src_dir}/templates"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/contest" "${submission_src_dir}/contest"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/tests" "${submission_src_dir}/tests"
+            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/cmake" "${submission_src_dir}/cmake"
 
-            COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/boost-cmake/boost"
-            COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_dir}/external/tbb"
+            COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_src_dir}/external/boost-cmake/boost"
+            COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_src_dir}/external/tbb"
 
-            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt" "${submission_dir}"
-            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/build.sh" "${submission_dir}"
-            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/Makefile" "${submission_dir}"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt" "${submission_src_dir}"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/build.sh" "${submission_src_dir}"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/Makefile" "${submission_src_dir}"
     )
 
     add_custom_command(OUTPUT ${submission_archive}
             ${prepare_clean_source_commands}
+
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/install" "${submission_dir}"
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/README" "${submission_dir}"
 
             COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${submission_target}>" "${submission_dir}/${submission_exe_name}"
             COMMAND ${CMAKE_COMMAND} -E chdir "${submission_dir}" tar czf "../${submission_archive}" .

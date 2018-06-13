@@ -17,12 +17,17 @@ set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 include(ucm)
 include(cotire)
 include(contest)
 
 if(WIN32)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS -DNOMINMAX)
+    ucm_add_flags(/MP4)
 endif()
 
 if (UNIX)
@@ -33,6 +38,7 @@ endif()
 
 if(APPLE)
         ucm_add_flags(-I/opt/X11/include)
+    	ucm_add_flags(CXX -fexceptions  -std=c++1z -stdlib=libc++ -ftemplate-depth=4096)
         ucm_add_linker_flags(EXE -L/opt/X11/lib -lglut)
 endif()
 
@@ -41,6 +47,8 @@ set(BOOST_IOSTREAMS_ENABLE_BZIP2 OFF CACHE BOOL "use bzip2")
 
 set(SFML_BUILD_NETWORK OFF CACHE BOOL "build network")
 set(SFML_BUILD_AUDIO OFF CACHE BOOL "build audio")
+
+set(SFGUI_INCLUDE_FONT ON CACHE BOOL "use builtin font")
 
 add_subdirectory(external)
 add_subdirectory(templates)

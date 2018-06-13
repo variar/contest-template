@@ -92,7 +92,7 @@ CMakeLists.txt.user*
 *.kdev4
 
 #build
-**/build
+**/build-*
 /.project
 
 #test
