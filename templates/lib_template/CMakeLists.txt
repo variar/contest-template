@@ -4,6 +4,5 @@ contest_add_library(lib_template
                                   LIBS 
                                     Boost::boost
                                     plog
-                                    seqan
                                     mpir
                                   TYPES static)
