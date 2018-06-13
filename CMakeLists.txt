@@ -5,8 +5,10 @@ if (POLICY CMP0058)
         cmake_policy(SET CMP0058 NEW)
 endif()
 
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.12)
+
+
 project(contest-template)
-set (CMAKE_CXX_STANDARD 14)
 
 set(out_dir "${CMAKE_BINARY_DIR}/output")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${out_dir}")
