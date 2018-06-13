@@ -4,7 +4,7 @@ contest_add_ui_exe(ui_exe_template
     LIBS
         dll_template
         sfgui
-        tclap
+        cli11
         plog
 )
 

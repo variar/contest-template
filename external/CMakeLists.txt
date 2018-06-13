@@ -1,5 +1,5 @@
 add_subdirectory(boost-cmake)
-add_subdirectory(tclap)
+add_subdirectory(cli11)
 add_subdirectory(rapidjson)
 
 add_subdirectory(stlab)

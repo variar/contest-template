@@ -1,5 +1,5 @@
 #include <thread>
-#include <tclap/CmdLine.h>
+#include <cli11/cli11.hpp>
 
 #include <lib_template/dummy.h>
 
@@ -25,17 +25,16 @@ int main(int argc, char *argv[])
     plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init(plog::debug, &consoleAppender);
     
-    TCLAP::CmdLine cmdLine {"dummy program to test externals", '=', "2016.8"};
+    CLI::App app{"dummy program to test externals"};
 
-    TCLAP::SwitchArg crashSwitch {"c","crash","crash switch", false};
-    cmdLine.add(crashSwitch);
-
-    cmdLine.parse(argc, argv);
-
-    if (crashSwitch.getValue())
-    {
-        int* a = nullptr;
-        *a = 0;
+    app.add_flag("-c,--crash",
+             [](size_t) {int* a = nullptr; *a = 0;},
+             "crash switch");
+   
+    try {
+        app.parse(argc, argv);
+    } catch (const CLI::ParseError &e) {
+        return app.exit(e);
     }
 
     Dummy d;
@@ -47,10 +46,10 @@ int main(int argc, char *argv[])
 
         LOG_INFO << "MPIR start";
         // Do some arithmetic:
-        for(unsigned i = 1; i <= 10000; ++i)
+        for(unsigned i = 1; i <= 1000; ++i)
             v *= i;
 
-        LOG_INFO << "MPIR done";
+        LOG_INFO << "MPIR done" << v;
     });
 
     auto f_boost = f_mpir.then(stlab::default_executor,[] {
@@ -59,7 +58,7 @@ int main(int argc, char *argv[])
 
         LOG_INFO << "BOOST start";
         // Do some arithmetic:
-        for (unsigned i = 1; i <= 10000; ++i)
+        for (unsigned i = 1; i <= 1000; ++i)
             v *= i;
 
         LOG_INFO << "BOOST done"; // prints 1000!

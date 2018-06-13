@@ -4,7 +4,7 @@ contest_add_exe(exe_template
         ${CMAKE_CURRENT_SOURCE_DIR}/source/main.cpp
     LIBS
         lib_template
-        tclap
+        cli11
         Boost::boost
         stlab
         lemon

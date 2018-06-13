@@ -1,6 +1,5 @@
 #include <dll_template/dummy_dll.h>
 #include <dll_template/log.h>
-#include <tclap/CmdLine.h>
 
 #include <plog/Appenders/ConsoleAppender.h>
 
@@ -10,10 +9,6 @@
 
 int main(int argc, char *argv[])
 {
-    TCLAP::CmdLine cmdLine {"dummy program to test externals", '=', "2016.8"};
-
-    cmdLine.parse(argc, argv);
-
     plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init(plog::debug, &consoleAppender);
     dll_template_log::initializePlog(plog::debug, plog::get());
