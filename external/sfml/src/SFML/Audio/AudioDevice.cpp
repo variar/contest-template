@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
-// Copyright (C) 2007-2017 Laurent Gomila (laurent@sfml-dev.org)
+// Copyright (C) 2007-2018 Laurent Gomila (laurent@sfml-dev.org)
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -107,7 +107,7 @@ bool AudioDevice::isExtensionSupported(const std::string& extension)
     // This device will not be used in this function and merely
     // makes sure there is a valid OpenAL device for extension
     // queries if none has been created yet.
-    std::unique_ptr<AudioDevice> device;
+    std::auto_ptr<AudioDevice> device;
     if (!audioDevice)
         device.reset(new AudioDevice);
 
@@ -125,7 +125,7 @@ int AudioDevice::getFormatFromChannelCount(unsigned int channelCount)
     // This device will not be used in this function and merely
     // makes sure there is a valid OpenAL device for format
     // queries if none has been created yet.
-    std::unique_ptr<AudioDevice> device;
+    std::auto_ptr<AudioDevice> device;
     if (!audioDevice)
         device.reset(new AudioDevice);
 
