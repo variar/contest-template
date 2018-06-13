@@ -28,6 +28,7 @@ _add_boost_test(
         ${BOOST_SOURCE}/libs/exception/test/helper2.cpp
     # Fails to build on Android x86
     # RUN ${BOOST_SOURCE}/libs/exception/test/errno_test.cpp
+    RUN ${BOOST_SOURCE}/libs/exception/test/error_info_basic_test.cpp
     RUN ${BOOST_SOURCE}/libs/exception/test/error_info_lv_test.cpp
     RUN ${BOOST_SOURCE}/libs/exception/test/error_info_lv_const_test.cpp
     RUN ${BOOST_SOURCE}/libs/exception/test/error_info_rv_test.cpp
@@ -37,5 +38,4 @@ _add_boost_test(
     RUN ${BOOST_SOURCE}/libs/exception/test/current_exception_cast_test.cpp
     RUN ${BOOST_SOURCE}/libs/exception/test/errinfos_test.cpp
     RUN ${BOOST_SOURCE}/libs/exception/test/exception_ptr_test.cpp
-    RUN ${BOOST_SOURCE}/libs/exception/test/N3757_test.cpp
 )

@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.0.0)
 project(Boost-CMake)
 
 option(BOOST_DOWNLOAD_TO_BINARY_DIR "Prefer downloading Boost to the binary directory instead of source directory" OFF)
-set(BOOST_URL "https://s3.eu-central-1.amazonaws.com/icfp2017/boost_1_63_0-1.tar.xz" CACHE STRING "Boost download URL")
-set(BOOST_URL_SHA256 "0fcedd1d5811db9aafef018cb5aba67e301401e7400de41fe9279f4f53673b41" CACHE STRING "Boost download URL SHA256 checksum")
+set(BOOST_URL "https://s3.eu-central-1.amazonaws.com/icfp2018/boost_1_67_0.tar.xz" CACHE STRING "Boost download URL")
+set(BOOST_URL_SHA256 "68d22a2b3b133eae98611359e8340f100a081e88dcb03afe3226c40b0842ebb5" CACHE STRING "Boost download URL SHA256 checksum")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 
@@ -49,7 +49,7 @@ set(BOOST_LIBS
   #python # complex module
   #random
   #regex
-  #serialization
+  serialization
   #signals
   system
   #unit_test_framework
