@@ -6,18 +6,32 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#ifndef PLOG_ENABLE_WCHAR_INPUT
+#   ifdef _WIN32
+#       define PLOG_ENABLE_WCHAR_INPUT 1
+#   else
+#       define PLOG_ENABLE_WCHAR_INPUT 0
+#   endif
+#endif
+
 #ifdef _WIN32
 #   include <plog/WinApi.h>
 #   include <time.h>
 #   include <sys/timeb.h>
 #   include <io.h>
 #   include <share.h>
+#elif defined(__rtems__)
+#   include <unistd.h>
+#   include <rtems.h>
+#   if PLOG_ENABLE_WCHAR_INPUT
+#       include <iconv.h>
+#   endif
 #else
 #   include <unistd.h>
 #   include <sys/syscall.h>
 #   include <sys/time.h>
 #   include <pthread.h>
-#   ifndef __ANDROID__
+#   if PLOG_ENABLE_WCHAR_INPUT
 #       include <iconv.h>
 #   endif
 #endif
@@ -35,11 +49,13 @@ namespace plog
     {
 #ifdef _WIN32
         typedef std::wstring nstring;
-        typedef std::wstringstream nstringstream;
+        typedef std::wostringstream nostringstream;
+        typedef std::wistringstream nistringstream;
         typedef wchar_t nchar;
 #else
         typedef std::string nstring;
-        typedef std::stringstream nstringstream;
+        typedef std::ostringstream nostringstream;
+        typedef std::istringstream nistringstream;
         typedef char nchar;
 #endif
 
@@ -84,8 +100,14 @@ namespace plog
         {
 #ifdef _WIN32
             return GetCurrentThreadId();
-#elif defined(__unix__)
+#elif defined(__linux__)
             return static_cast<unsigned int>(::syscall(__NR_gettid));
+#elif defined(__FreeBSD__)
+            long tid;
+            syscall(SYS_thr_self, &tid);
+            return static_cast<unsigned int>(tid);
+#elif defined(__rtems__)
+            return rtems_task_self();
 #elif defined(__APPLE__)
             uint64_t tid64;
             pthread_threadid_np(NULL, &tid64);
@@ -93,7 +115,7 @@ namespace plog
 #endif
         }
 
-#if !defined(__ANDROID__) && !defined(_WIN32)
+#if PLOG_ENABLE_WCHAR_INPUT && !defined(_WIN32)
         inline std::string toNarrow(const wchar_t* wstr)
         {
             size_t wlen = ::wcslen(wstr);
@@ -132,13 +154,13 @@ namespace plog
             return wstr;
         }
 
-        inline std::string toUTF8(const std::wstring& wstr)
+        inline std::string toNarrow(const std::wstring& wstr, long page)
         {
             std::string str(wstr.size() * sizeof(wchar_t), 0);
 
             if (!str.empty())
             {
-                int len = WideCharToMultiByte(codePage::kUTF8, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
+                int len = WideCharToMultiByte(page, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
                 str.resize(len);
             }
 
@@ -304,6 +326,11 @@ namespace plog
             {
 #ifdef _WIN32
                 InitializeCriticalSection(&m_sync);
+#elif defined(__rtems__)
+                rtems_semaphore_create(0, 1,
+                            RTEMS_PRIORITY |
+                            RTEMS_BINARY_SEMAPHORE |
+                            RTEMS_INHERIT_PRIORITY, 1, &m_sync);
 #else
                 ::pthread_mutex_init(&m_sync, 0);
 #endif
@@ -313,6 +340,8 @@ namespace plog
             {
 #ifdef _WIN32
                 DeleteCriticalSection(&m_sync);
+#elif defined(__rtems__)
+                rtems_semaphore_delete(m_sync);
 #else
                 ::pthread_mutex_destroy(&m_sync);
 #endif
@@ -325,6 +354,8 @@ namespace plog
             {
 #ifdef _WIN32
                 EnterCriticalSection(&m_sync);
+#elif defined(__rtems__)
+                rtems_semaphore_obtain(m_sync, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
 #else
                 ::pthread_mutex_lock(&m_sync);
 #endif
@@ -334,6 +365,8 @@ namespace plog
             {
 #ifdef _WIN32
                 LeaveCriticalSection(&m_sync);
+#elif defined(__rtems__)
+                rtems_semaphore_release(m_sync);
 #else
                 ::pthread_mutex_unlock(&m_sync);
 #endif
