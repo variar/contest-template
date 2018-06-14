@@ -14,7 +14,7 @@ add_subdirectory(stacktrace)
 
 if(NOT SUBMISSION_BUILD)
     add_subdirectory(sfml)
-    add_subdirectory(sfgui)
+    add_subdirectory(imgui)
 endif()
 
 

@@ -12,6 +12,8 @@
 
 #include <plog/Log.h>
 #include <SFML/Graphics.hpp>
-#include <SFGUI/SFGUI.hpp>
+#include <imgui/imgui.h>
+#include <imgui/imgui-SFML.h>
+
 
 #endif

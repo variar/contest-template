@@ -37,7 +37,7 @@ function(contest_exclude_from_submission_build target)
 endfunction()
 
 function(check_ui_linking libs features)
-    if (";${libs};" MATCHES ";sfml;|;sfgui;")
+    if (";${libs};" MATCHES ";sfml;|;sfgui;|;imgui;")
         if (NOT ";${features};" MATCHES ";ui;" )
             message(FATAL_ERROR "Should use contest_add_ui_xxx if linking to sfml or sfgui. This target will not go to submission build")
         endif()
@@ -222,7 +222,6 @@ function(contest_add_submission submission_dir submission_archive submission_tar
             COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/cmake" "${submission_src_dir}/cmake"
 
             COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_src_dir}/external/boost-cmake/boost"
-            COMMAND ${CMAKE_COMMAND} -E remove_directory "${submission_src_dir}/external/tbb"
 
             COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt" "${submission_src_dir}"
             COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/build.sh" "${submission_src_dir}"
