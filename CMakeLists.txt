@@ -5,7 +5,7 @@ if (POLICY CMP0058)
         cmake_policy(SET CMP0058 NEW)
 endif()
 
-set(CMAKE_OSX_DEPLOYMENT_TARGET 10.12)
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.13)
 
 
 project(contest-template)
