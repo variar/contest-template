@@ -1,4 +1,5 @@
 add_subdirectory(boost-cmake)
+add_subdirectory(abseil)
 add_subdirectory(cli11)
 add_subdirectory(rapidjson)
 

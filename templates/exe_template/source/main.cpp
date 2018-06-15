@@ -16,11 +16,14 @@
 #include <boost/multiprecision/gmp.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 
-#include <crash_handler/crash_tracer.h>
+#include <absl/debugging/failure_signal_handler.h>
+#include <absl/debugging/symbolize.h>
 
 int main(int argc, char *argv[])
 {
-    CrashTracer crashTracer;
+    absl::InitializeSymbolizer(argv[0]);
+    absl::FailureSignalHandlerOptions options;
+    absl::InstallFailureSignalHandler(options);
 
     plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init(plog::debug, &consoleAppender);
