@@ -1,6 +1,6 @@
 version: '{build}'
 
-os: Visual Studio 2015
+os: Visual Studio 2017
 
 platform:
   - x64
@@ -9,7 +9,7 @@ configuration:
   - Release
   
 environment:
-  CMAKE_GENERATOR_NAME: Visual Studio 14 2015 Win64
+  CMAKE_GENERATOR_NAME: Visual Studio 15 2017 Win64
   CMAKE_BUILD_TYPE: Release
 
 matrix:
