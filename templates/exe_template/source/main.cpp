@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     
     CLI::App app{"dummy program to test externals"};
 
-    app.add_flag("-c,--crash",
+    app.add_flag_function("-c,--crash",
              [](size_t) {int* a = nullptr; *a = 0;},
              "crash switch");
    
