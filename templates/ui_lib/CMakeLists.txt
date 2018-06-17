@@ -14,4 +14,8 @@ contest_add_ui_library(ui_lib
         gsl
     )
 
+if (WIN32)
+target_link_libraries(ui_lib PUBLIC comdlg32 ole32)
+endif()
+
 #cotire(ui_lib)
