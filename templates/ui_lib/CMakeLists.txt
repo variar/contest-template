@@ -7,6 +7,9 @@ contest_add_ui_library(ui_lib
     LIBS
         imgui
         plog
+        absl::variant
+        absl::optional
+        gsl
     )
 
 cotire(ui_lib)

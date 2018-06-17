@@ -2,7 +2,7 @@
 
 #include <imgui/imgui.h>
 
-#include <variant>
+#include <absl/types/variant.h>
 #include <functional>
 
 namespace ui
@@ -35,7 +35,7 @@ struct Progress
 
 struct WorldParameter
 {
-    using ValueT = std::variant<std::string, bool, int, float, RadioOptions, ComboOptions, Progress>;
+    using ValueT = absl::variant<std::string, bool, int, float, RadioOptions, ComboOptions, Progress>;
 
     WorldParameter(std::string name, ValueT val, bool readOnly = false)
         : name {std::move(name)}
@@ -68,7 +68,7 @@ T GetParamByName(const WorldParameters& params, const std::string& name)
 
     if (param != params.end()) 
     {
-        return std::get<T>(param->value);
+        return absl::get<T>(param->value);
     }
 
     return {};

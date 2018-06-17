@@ -11,9 +11,11 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 #include <memory>
-#include <optional>
+#include <absl/types/optional.h>
 
 #include <ui_lib/ui_parameters_wrappers.h>
+
+#include <gsl/gsl_util.h>
 
 namespace ui
 {
@@ -238,7 +240,7 @@ private:
         auto worldParams = m_world->GetParams();
         for (auto& param : worldParams)
         {
-            std::visit(ImGuiParamsVisitor(param.name, param.isReadOnly), param.value);
+            absl::visit(ImGuiParamsVisitor(param.name, param.isReadOnly), param.value);
         }
         ImGui::PopItemWidth();
 
@@ -290,15 +292,15 @@ private:
 private:
     void AdjustViewsToWindowSize(const sf::Vector2u& windowSize, const sf::Vector2u& worldSize)
     {
-        static const sf::Vector2f previewSize {WorldPreviewWidth, WorldPreviewHeight};
-        const auto panelSize = sf::Vector2f{windowSize.x - previewSize.x, PanelHeight};
+        static const sf::Vector2f previewSize {gsl::narrow_cast<float>(WorldPreviewWidth), gsl::narrow_cast<float>(WorldPreviewHeight)};
+        const auto panelSize = sf::Vector2f{windowSize.x - previewSize.x, gsl::narrow_cast<float>(PanelHeight)};
 
         LOG_INFO << "old window size " << m_windowSize.x << " " << m_windowSize.y;
         LOG_INFO << "window size " << windowSize.x << " " << windowSize.y;
 
 
-        const sf::Vector2i windowSizeDelta = {static_cast<int>(windowSize.x - m_windowSize.x), 
-                                                static_cast<int>(windowSize.y - m_windowSize.y)};
+        const sf::Vector2i windowSizeDelta = {gsl::narrow_cast<int>(windowSize.x - m_windowSize.x), 
+                                                gsl::narrow_cast<int>(windowSize.y - m_windowSize.y)};
         if (windowSizeDelta.x == 0 && windowSizeDelta.y == 0) {
             m_worldView.reset(sf::FloatRect(0, 0, windowSize.x - previewSize.x, windowSize.y - panelSize.y));
         }
@@ -321,7 +323,7 @@ private:
         m_worldView.setViewport({previewSize.x/windowSize.x, 0,
                                 1.0f - previewSize.x/windowSize.x, 1.0f - panelSize.y/windowSize.y});
 
-        m_previewView.setSize(sf::Vector2f{static_cast<float>(worldSize.x), static_cast<float>(worldSize.y)});
+        m_previewView.setSize(sf::Vector2f{gsl::narrow_cast<float>(worldSize.x), gsl::narrow_cast<float>(worldSize.y)});
         m_previewView.setCenter(m_previewView.getSize() / 2.f);
 
         m_previewView.setViewport({0, 1.0f-previewSize.y/windowSize.y,
@@ -369,7 +371,7 @@ private:
 
     WindowArea GetWindowArea(const sf::Vector2i& pixel) const
     {
-        const auto y = static_cast<unsigned>(pixel.y);
+        const auto y = gsl::narrow_cast<unsigned>(pixel.y);
         if (pixel.x < WorldPreviewWidth)
         {
             return  (y > m_appWindow.getSize().y - WorldPreviewHeight) ?
@@ -386,7 +388,7 @@ private:
 
 private:
     sf::RenderWindow m_appWindow;
-    std::optional<sf::Vector2f> m_mouseMoveOrigin;
+    absl::optional<sf::Vector2f> m_mouseMoveOrigin;
     sf::Vector2u m_windowSize;
 
     std::unique_ptr<WorldType> m_world;
