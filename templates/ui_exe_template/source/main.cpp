@@ -150,13 +150,14 @@ public:
 
     ui::WorldActions GetActions()
     {
-        return { 
+        return ui::WorldActions
+               { 
                     {"Clear", [this]{ m_circles.clear(); } },
                     {"Sceenshot", [this]
                     {
                         m_screenshotFutures.emplace_back(ui::RenderToFile("test.png", *this));
                     }}
-                };
+               };
 
     }
 
