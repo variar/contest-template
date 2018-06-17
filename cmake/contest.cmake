@@ -25,7 +25,7 @@ function(contest_stdafx_h target)
         message("Found stdafx.h in ${CMAKE_CURRENT_SOURCE_DIR}/source")
         set_target_properties(${target} PROPERTIES
             COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.h"
-            COTIRE_COTIRE_ADD_UNITY_BUILD FALSE
+            COTIRE_ADD_UNITY_BUILD FALSE
         )
     endif()
 endfunction()
