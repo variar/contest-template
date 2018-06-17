@@ -4,6 +4,8 @@
 
 #include <absl/types/variant.h>
 #include <functional>
+#include <string>
+#include <vector>
 
 namespace ui
 {

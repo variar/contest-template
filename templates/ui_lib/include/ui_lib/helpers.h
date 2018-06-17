@@ -1,6 +1,9 @@
 #pragma once
 
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 
 #include <future>
 
@@ -25,5 +28,12 @@ std::future<void> RenderToFile(const std::string& filename, World& w)
     });
 }
 
+class FileHelpers
+{
+    public:
+    static std::string GetOpenFileName();
+    static std::string GetSaveFileName();
+
+};
 
 }

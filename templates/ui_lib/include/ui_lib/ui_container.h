@@ -234,8 +234,7 @@ private:
                 ImGuiWindowFlags_NoResize |
                 ImGuiWindowFlags_NoCollapse |
                 ImGuiWindowFlags_NoSavedSettings |
-                ImGuiWindowFlags_AlwaysAutoResize |
-                ImGuiWindowFlags_NoTitleBar;
+                ImGuiWindowFlags_AlwaysAutoResize;
 
         const auto windowSize = m_appWindow.getSize();
         const auto lPanelSize = sf::Vector2u{WorldPreviewWidth, windowSize.y - WorldPreviewHeight};
@@ -243,10 +242,8 @@ private:
 
         ImGui::SetNextWindowPos(ImVec2(0,0));
         ImGui::SetNextWindowSizeConstraints(lPanelSize, lPanelSize);
-        ImGui::Begin("LPanel", nullptr, flags);
+        ImGui::Begin("Parameters", nullptr, flags);
    
-        ImGui::Text("Left panel");
-
         ImGui::PushItemWidth(lPanelSize.x*0.8);
         auto worldParams = m_world->GetParams();
         for (auto& param : worldParams)
@@ -269,12 +266,35 @@ private:
 
         ImGui::End();
 
+
+        m_logBuffer.clear();
+        const auto logStrings = m_world->GetLog();
+        for (const auto& s: logStrings) 
+        {
+            m_logBuffer.appendf("%s\n", s.c_str());
+        }
+
         const auto panelPosition = sf::Vector2u{WorldPreviewWidth, windowSize.y - PanelHeight};
         const auto dPanelSize = sf::Vector2u{windowSize.x - WorldPreviewWidth, PanelHeight};
         ImGui::SetNextWindowPos(panelPosition);
         ImGui::SetNextWindowSizeConstraints(dPanelSize, dPanelSize);
-        ImGui::Begin("DPanel", nullptr, flags);
-        ImGui::Text("Bottom panel");
+        ImGui::Begin("Log", nullptr, flags);
+
+        if (ImGui::Button("Clear"))
+        {
+            m_world->ClearLog();
+            m_logBuffer.clear();
+
+
+        }
+        ImGui::Separator();
+
+        ImGui::BeginChild("scrolling");
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0,1));
+        ImGui::TextUnformatted(m_logBuffer.begin());
+        ImGui::SetScrollHere(1.0f);
+        ImGui::PopStyleVar();
+        ImGui::EndChild();
         ImGui::End();
 
     }
@@ -418,6 +438,8 @@ private:
     sf::View m_previewView;
 
     std::shared_ptr<sf::Font> m_font;
+
+    ImGuiTextBuffer m_logBuffer;
 
 private:
     static constexpr uint16_t PanelWidth = 220;

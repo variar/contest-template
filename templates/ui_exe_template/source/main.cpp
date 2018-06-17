@@ -17,7 +17,6 @@
 #include <ui_lib/ui_container.h>
 #include <ui_lib/helpers.h>
 
-
 #include <absl/debugging/failure_signal_handler.h>
 #include <absl/debugging/symbolize.h>
 
@@ -106,6 +105,8 @@ public:
 
                 m_circles.push_back({circle, t});
                 m_selectedCircle = m_circles.end();
+
+                m_log.emplace_back("Circle added");
             }
         }
 
@@ -166,6 +167,16 @@ public:
         m_font = std::move(font);
     }
 
+    std::vector<std::string> GetLog() const
+    {
+        return m_log;
+    }
+
+    void ClearLog()
+    {
+        m_log.clear();
+    }
+
 private:
     std::vector<Circle> m_circles;
     std::vector<Circle>::iterator m_selectedCircle;
@@ -175,6 +186,8 @@ private:
     std::vector<std::future<void>> m_screenshotFutures;
 
     std::shared_ptr<sf::Font> m_font;
+
+    std::vector<std::string> m_log;
 
 };
 
@@ -186,6 +199,9 @@ int main(int argc, char *argv[])
 
     plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
     plog::init(plog::debug, &consoleAppender);
+
+    auto path = ui::FileHelpers::GetSaveFileName();
+    LOG_INFO << path;
 
     ui::UiContainer<World> container{1280, 720, "Ui template", std::make_unique<World>()};
     container.Run();
