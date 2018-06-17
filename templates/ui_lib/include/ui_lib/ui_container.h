@@ -17,6 +17,8 @@
 
 #include <gsl/gsl_util.h>
 
+#include <ui_lib/font.h>
+
 namespace ui
 {
 
@@ -28,8 +30,17 @@ public:
                 std::unique_ptr<WorldType> world)
         : m_appWindow{sf::VideoMode{windowWidth, windowHeight}, windowName}
         , m_world{std::move(world)}
+        , m_font{std::make_shared<sf::Font>()}
     {
         ImGui::SFML::Init(m_appWindow);
+        if (!m_font->loadFromMemory(font::Data, font::Lenght))
+        {
+            LOG_ERROR << "Failed to load font";
+        }
+        else
+        {
+            m_world->SetFont(m_font);
+        }
     }
 
     ~UiContainer()
@@ -405,6 +416,8 @@ private:
 
     sf::View m_worldView;
     sf::View m_previewView;
+
+    std::shared_ptr<sf::Font> m_font;
 
 private:
     static constexpr uint16_t PanelWidth = 220;

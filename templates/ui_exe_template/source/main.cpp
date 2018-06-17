@@ -21,19 +21,14 @@
 #include <absl/debugging/failure_signal_handler.h>
 #include <absl/debugging/symbolize.h>
 
-sf::View zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window,  sf::View view, float zoom)
-{
-	const sf::Vector2f beforeCoord{ window.mapPixelToCoords(pixel, view) };
-	view.zoom(zoom);
-	window.setView(view);
-	const sf::Vector2f afterCoord{ window.mapPixelToCoords(pixel) };
-	const sf::Vector2f offsetCoords{ beforeCoord - afterCoord };
-	view.move(offsetCoords);
-    return  view;
-}
-
 class World 
 {
+    struct Circle
+    {
+        sf::CircleShape shape;
+        sf::Text text;
+    };
+
 public:
     World() : m_circleRadius{10.f}
     {
@@ -75,8 +70,10 @@ public:
             isBlack = !isBlack;
         }
 
-        for (const auto& c : m_circles) {
-            renderTarget.draw(c);
+        for (auto& c : m_circles) {
+            renderTarget.draw(c.shape);
+            c.text.setPosition(c.shape.getPosition() + sf::Vector2f{c.shape.getRadius()*3, 0.f});
+            renderTarget.draw(c.text);
         }
     }
 
@@ -92,7 +89,7 @@ public:
                 auto circle = std::find_if(m_circles.begin(), m_circles.end(),
                 [&worldCoords](const auto& c)
                 {
-                    return c.getGlobalBounds().contains(worldCoords);
+                    return c.shape.getGlobalBounds().contains(worldCoords);
                 });
                 if (circle != m_circles.end())
                 {
@@ -104,7 +101,10 @@ public:
                 auto circle = sf::CircleShape(m_circleRadius);
                 circle.setFillColor(sf::Color::Red);
                 circle.setPosition(worldCoords - sf::Vector2f{m_circleRadius, m_circleRadius});
-                m_circles.push_back(circle);
+
+                sf::Text t{"Circle", *m_font};
+
+                m_circles.push_back({circle, t});
                 m_selectedCircle = m_circles.end();
             }
         }
@@ -114,8 +114,8 @@ public:
 
             if (m_selectedCircle != m_circles.end())
             {
-                const auto radius = m_selectedCircle->getRadius();
-                m_selectedCircle->setPosition(worldCoords - sf::Vector2f{radius, radius});
+                const auto radius = m_selectedCircle->shape.getRadius();
+                m_selectedCircle->shape.setPosition(worldCoords - sf::Vector2f{radius, radius});
             }
 
             if (!isShiftPressed)
@@ -128,8 +128,8 @@ public:
         {
             if (m_selectedCircle != m_circles.end())
             {
-                const auto radius = m_selectedCircle->getRadius();
-                m_selectedCircle->setPosition(worldCoords - sf::Vector2f{radius, radius});
+                const auto radius = m_selectedCircle->shape.getRadius();
+                m_selectedCircle->shape.setPosition(worldCoords - sf::Vector2f{radius, radius});
             }
             m_selectedCircle = m_circles.end();
         }
@@ -161,13 +161,20 @@ public:
 
     }
 
+    void SetFont(std::shared_ptr<sf::Font> font)
+    {
+        m_font = std::move(font);
+    }
+
 private:
-    std::vector<sf::CircleShape> m_circles;
-    std::vector<sf::CircleShape>::iterator m_selectedCircle;
+    std::vector<Circle> m_circles;
+    std::vector<Circle>::iterator m_selectedCircle;
 
     float m_circleRadius;
 
     std::vector<std::future<void>> m_screenshotFutures;
+
+    std::shared_ptr<sf::Font> m_font;
 
 };
 
