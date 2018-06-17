@@ -1,5 +1,7 @@
 #include <ui_lib/ui_parameters_wrappers.h>
 
+#include <cstring>
+
 namespace ui
 {
 

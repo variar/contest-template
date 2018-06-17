@@ -32,5 +32,5 @@ test_script:
   - cmd: ctest --build-config %configuration%
 
 artifacts:
-  - path: C:\projects\contest\build\output\ui_exe_template.exe
+  - path: output\ui_exe_template.exe
     name: ui
