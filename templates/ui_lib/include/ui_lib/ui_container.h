@@ -186,7 +186,7 @@ private:
 
     void PushEventToWorld(const sf::Event& event) const
     {
-        std::optional<sf::Vector2i> position;
+        absl::optional<sf::Vector2i> position;
         switch(event.type)
         {
             case sf::Event::MouseButtonPressed:
@@ -295,33 +295,43 @@ private:
         static const sf::Vector2f previewSize {gsl::narrow_cast<float>(WorldPreviewWidth), gsl::narrow_cast<float>(WorldPreviewHeight)};
         const auto panelSize = sf::Vector2f{windowSize.x - previewSize.x, gsl::narrow_cast<float>(PanelHeight)};
 
-        LOG_INFO << "old window size " << m_windowSize.x << " " << m_windowSize.y;
-        LOG_INFO << "window size " << windowSize.x << " " << windowSize.y;
+        auto worldViewport = sf::FloatRect{previewSize.x/windowSize.x, 0,
+                                1.0f - previewSize.x/windowSize.x, 1.0f - panelSize.y/windowSize.y};
 
+        auto worldViewSize = sf::Vector2f{windowSize.x - previewSize.x, windowSize.y - panelSize.y};
 
-        const sf::Vector2i windowSizeDelta = {gsl::narrow_cast<int>(windowSize.x - m_windowSize.x), 
-                                                gsl::narrow_cast<int>(windowSize.y - m_windowSize.y)};
-        if (windowSizeDelta.x == 0 && windowSizeDelta.y == 0) {
-            m_worldView.reset(sf::FloatRect(0, 0, windowSize.x - previewSize.x, windowSize.y - panelSize.y));
+        if (windowSize == m_windowSize)
+        {
+            m_worldView.reset({0, 0, worldViewSize.x, worldViewSize.y});
         }
         else 
         {
-            const auto center = m_worldView.getCenter();
-            auto worldViewSize = m_worldView.getSize();
-            LOG_INFO << "old view size " << worldViewSize.x << " " << worldViewSize.y;
+            //const auto center = m_worldView.getCenter();
+            auto oldViewSize = m_worldView.getSize();
 
-            worldViewSize.x += windowSizeDelta.x;
-            worldViewSize.y += windowSizeDelta.y;
+            auto aspect = worldViewSize.y/worldViewSize.x;
+            if(windowSize.x > windowSize.y)
+            {
+                worldViewSize.y = oldViewSize.y;
+                worldViewSize.x = oldViewSize.y / aspect;
+            }
+            else 
+            {
+                worldViewSize.x = oldViewSize.x;
+                worldViewSize.y = oldViewSize.x * aspect;
+            }
 
-            LOG_INFO << "view size " << worldViewSize.x << " " << worldViewSize.y;
+            auto oldCenter = m_worldView.getCenter();
+            auto centerPixel = m_appWindow.mapCoordsToPixel(oldCenter, m_worldView);
 
             m_worldView.setSize(worldViewSize);
-            m_worldView.setCenter(center);
+
+            auto newCenter = m_appWindow.mapPixelToCoords(centerPixel, m_worldView);
+
+            m_worldView.move(newCenter - oldCenter);
         }
 
-
-        m_worldView.setViewport({previewSize.x/windowSize.x, 0,
-                                1.0f - previewSize.x/windowSize.x, 1.0f - panelSize.y/windowSize.y});
+        m_worldView.setViewport(worldViewport);
 
         m_previewView.setSize(sf::Vector2f{gsl::narrow_cast<float>(worldSize.x), gsl::narrow_cast<float>(worldSize.y)});
         m_previewView.setCenter(m_previewView.getSize() / 2.f);
