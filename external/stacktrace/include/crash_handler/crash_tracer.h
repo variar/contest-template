@@ -4,7 +4,7 @@
 class CrashTracer
 {
 public:
-    CrashTracer();
+    CrashTracer(const char* modulePath);
 };
 
 #endif //CONTEST_TEMPLATE_CRASH_TRACER_H

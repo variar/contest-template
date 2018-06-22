@@ -12,8 +12,7 @@ contest_add_exe(exe_template
         gsl
         mpir
         absl::strings
-        absl::symbolize
-        absl::failure_signal_handler
+        stacktrace
 )
 
 cotire(exe_template)
