@@ -14,7 +14,7 @@ endfunction()
 macro(contest_stdafx_cpp)
      if(WIN32)
         if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
-            message("Found stdafx in ${CMAKE_CURRENT_SOURCE_DIR}/source")
+            message("Found stdafx.cpp in ${CMAKE_CURRENT_SOURCE_DIR}/source")
             list(INSERT THIS_SOURCES 0 ${CMAKE_CURRENT_SOURCE_DIR}/source/stdafx.cpp)
         endif()
     endif()
@@ -51,7 +51,8 @@ endfunction()
 # ex: contest_add_library(test_exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      INCLUDES path1 path2 ...
-#                      LIBS dummy_lib ...)
+#                      LIBS dummy_lib ...
+#                      USE_FEATURES ...)
 function(contest_add_basic_library target type output)
     cmake_parse_arguments(THIS "" "" "TYPE;SOURCES;INCLUDES;LIBS;USE_FEATURES" ${ARGN})
     
@@ -59,7 +60,9 @@ function(contest_add_basic_library target type output)
     
     check_ui_linking("${THIS_LIBS}" "${THIS_USE_FEATURES}")
 
-    add_library(${target} ${type}	${THIS_SOURCES})
+    add_library(${target} ${type} "")
+
+    target_sources(${target} PRIVATE ${THIS_SOURCES})
 
     generate_export_header(${target} BASE_NAME ${output})
        
@@ -98,7 +101,7 @@ function (contest_add_library target)
 
         if("${THIS_LIB_TYPES}" MATCHES ";shared;")
             set(static_target ${target}_static)
-	endif()
+	    endif()
 
         contest_add_basic_library(
             ${static_target} STATIC
@@ -116,11 +119,11 @@ function (contest_add_library target)
     if("${THIS_LIB_TYPES}" MATCHES ";shared;")
 	    
         if("${THIS_LIB_TYPES}" MATCHES ";satic;")
-	    set(shared_target ${target}_shared)
-	endif()
+	        set(shared_target ${target}_shared)
+	    endif()
 
         contest_add_basic_library(
-	    ${shared_target} SHARED
+	        ${shared_target} SHARED
             ${target}
             SOURCES ${THIS_SOURCES}
             INCLUDES ${THIS_INCLUDE_PATHS}
@@ -129,7 +132,7 @@ function (contest_add_library target)
         )
 
         set_target_properties(${shared_target} PROPERTIES VISIBILITY_INLINES_HIDDEN 1)
-        set_target_properties(${shared_target} PROPERTIES  CXX_VISIBILITY_PRESET hidden)
+        set_target_properties(${shared_target} PROPERTIES CXX_VISIBILITY_PRESET hidden)
 
         target_compile_definitions(${shared_target} PRIVATE -D${target}_EXPORTS)
         
@@ -145,7 +148,7 @@ function (contest_add_library target)
     endif()
 endfunction()
 
-# ex: contest_add_test(test_exe_name
+# ex: contest_add_exe(exe_name
 #                      SOURCES sprite.cpp image.cpp ...
 #                      LIBS catch dummy_lib ...)
 function(contest_add_exe target)
@@ -155,7 +158,9 @@ function(contest_add_exe target)
 
     contest_stdafx_cpp()
 
-    add_executable(${target} ${THIS_SOURCES})
+    add_executable(${target} "")
+
+    target_sources(${target} PRIVATE ${THIS_SOURCES})
     
     target_include_directories(${target} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -190,8 +195,8 @@ function (contest_add_test target)
         endif()
 
         add_test(NAME run_${target}
-                        COMMAND ${target}
-                         WORKING_DIRECTORY $<TARGET_FILE_DIR:${target}>)
+                COMMAND ${target}
+                WORKING_DIRECTORY $<TARGET_FILE_DIR:${target}>)
 endfunction()
 
 function(contest_add_ui_exe target)
