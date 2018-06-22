@@ -13,6 +13,8 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Graphics/Text.hpp>
+
 
 #include <ui_lib/ui_container.h>
 #include <ui_lib/helpers.h>
@@ -31,6 +33,7 @@ class World
 public:
     World() : m_circleRadius{10.f}
     {
+        m_selectedCircle = m_circles.end();
     }
 
     sf::Vector2u GetSize()
@@ -153,7 +156,7 @@ public:
     {
         return ui::WorldActions
                { 
-                    {"Clear", [this]{ m_circles.clear(); } },
+                    {"Clear", [this]{ m_circles.clear(); m_selectedCircle = m_circles.end(); } },
                     {"Sceenshot", [this]
                     {
                         m_screenshotFutures.emplace_back(ui::RenderToFile("test.png", *this));

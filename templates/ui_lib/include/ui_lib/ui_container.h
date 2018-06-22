@@ -9,6 +9,8 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Font.hpp>
+
 
 #include <memory>
 #include <absl/types/optional.h>
@@ -41,6 +43,8 @@ public:
         {
             m_world->SetFont(m_font);
         }
+
+        m_appWindow.setVerticalSyncEnabled(true);
     }
 
     ~UiContainer()
