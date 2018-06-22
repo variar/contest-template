@@ -6,8 +6,6 @@
 #include <stlab/concurrency/default_executor.hpp>
 #include <stlab/concurrency/future.hpp>
 
-#include <lemon/list_graph.h>
-
 #include <plog/Appenders/ConsoleAppender.h>
 
 #include <gsl/gsl_util.h>
@@ -75,13 +73,6 @@ int main(int argc, char *argv[])
     {
         auto guard = gsl::finally([]() { LOG_INFO << "guard done"; });
     }
-
-    using namespace lemon;
-    ListDigraph g;
-    ListDigraph::Node u = g.addNode();
-    ListDigraph::Node v = g.addNode();
-    g.addArc(u, v);
-    LOG_INFO <<  "Hello World! This is LEMON library here.";
 
     return 0;
 }

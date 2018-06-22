@@ -7,7 +7,6 @@ contest_add_exe(exe_template
         cli11
         Boost::boost
         stlab
-        lemon
         plog
         gsl
         mpir

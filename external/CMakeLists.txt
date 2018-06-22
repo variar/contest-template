@@ -1,10 +1,9 @@
-add_subdirectory(boost-cmake)
 add_subdirectory(abseil)
+add_subdirectory(boost-cmake)
 add_subdirectory(cli11)
 add_subdirectory(rapidjson)
 
 add_subdirectory(stlab)
-add_subdirectory(lemon)
 add_subdirectory(plog)
 add_subdirectory(gsl)
 
