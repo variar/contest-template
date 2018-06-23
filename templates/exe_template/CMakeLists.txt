@@ -11,6 +11,8 @@ contest_add_exe(exe_template
         gsl
         mpir
         absl::strings
+        absl::optional
+        absl::variant
         stacktrace
 )
 

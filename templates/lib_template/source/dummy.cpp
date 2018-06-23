@@ -36,7 +36,7 @@ Dummy::Dummy()
     LOG_INFO << "Dummy lib constructed";
 
     std::string testJson = "{ \"data\" : [ "\
-                                "{\"id2\" : 1, \"x\" : 0.1, \"y\" : 0.5},"\
+                                "{\"id\" : 1, \"x\" : 0.1, \"y\" : 0.5},"\
                                 "{\"id1\" : 1, \"str\" : \"y\"}"\
                             "]}";
 

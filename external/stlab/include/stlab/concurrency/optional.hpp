@@ -31,12 +31,12 @@
 #if __has_include(<optional>) && STLAB_CPP_VERSION == 17 // Check for a standard library
 #include <optional>
 #define STLAB_OPTIONAL STLAB_STD_OPTIONAL
-#elif __has_include(<experimental/optional>) // Check for an experimental version
-#include <experimental/optional>
-#define STLAB_OPTIONAL STLAB_STD_EXPERIMENTAL_OPTIONAL
 #elif __has_include(<absl/types/optional.h>) // Check for abseil version
 #include <absl/types/optional.h>
 #define STLAB_OPTIONAL STLAB_ABSEIL_OPTIONAL
+#elif __has_include(<experimental/optional>) // Check for an experimental version
+#include <experimental/optional>
+#define STLAB_OPTIONAL STLAB_STD_EXPERIMENTAL_OPTIONAL
 #endif
 #endif
 #endif

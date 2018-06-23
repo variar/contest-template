@@ -85,14 +85,14 @@ namespace cpp17
 		template<typename T>
 		using optional = std::optional<T>;
 		inline constexpr auto nullopt() { return std::nullopt; }
-	#elif defined(JSON_DTO_HAS_EXPERIMENTAL_OPTIONAL)
-		template<typename T>
-		using optional = std::experimental::optional<T>;
-		inline constexpr auto nullopt() { return std::experimental::nullopt; }
 	#elif defined(JSON_DTO_HAS_ABSL_OPTIONAL)
 		template<typename T>
 		using optional = absl::optional<T>;
 		inline constexpr auto nullopt() { return absl::nullopt; }
+	#elif defined(JSON_DTO_HAS_EXPERIMENTAL_OPTIONAL)
+		template<typename T>
+		using optional = std::experimental::optional<T>;
+		inline constexpr auto nullopt() { return std::experimental::nullopt; }
 	#endif
 #endif
 
@@ -130,40 +130,6 @@ namespace cpp17
 		constexpr auto visit(Visitor&& vis, Variants&&... vars) {
 			return std::visit(std::forward<Visitor>(vis), std::forward<Variants>(vars)...);
 		}
-
-	#elif defined(JSON_DTO_HAS_EXPERIMENTAL_VARIANT)
-		template<class... Types>
-		using variant = std::experimental::variant<Types...>;
-
-		template <class T, class... Types>
-		constexpr T& get(std::experimental::variant<Types...>& v) {
-			return std::experimental::get<T>(v);
-		}
-
-		template <class T, class... Types>
-		constexpr T&& get(std::experimental::variant<Types...>&& v) {
-			return std::experimental::get<T>(std::move(v));
-		}
-
-		template <class T, class... Types>
-		constexpr const T& get(const std::experimental::variant<Types...>& v) {
-			return std::experimental::get<T>(v);
-		}
-
-		template <class T, class... Types>
-		constexpr const T&& get(const std::experimental::variant<Types...>&& v) {
-			return std::experimental::get<T>(std::move(v));
-		}
-
-		template <typename... Types>
-		constexpr auto index(const std::experimental::variant<Types...>& v) {
-			return v.index();
-		}
-
-		template <class Visitor, class... Variants>
-		constexpr auto visit(Visitor&& vis, Variants&&... vars) {
-			return std::experimental::visit(std::forward<Visitor>(vis), std::forward<Variants>(vars)...);
-		}
 	#elif defined(JSON_DTO_HAS_ABSL_VARIANT)
 		template<class... Types>
 		using variant = absl::variant<Types...>;
@@ -196,6 +162,39 @@ namespace cpp17
 		template <class Visitor, class... Variants>
 		constexpr auto visit(Visitor&& vis, Variants&&... vars) {
 			return absl::visit(std::forward<Visitor>(vis), std::forward<Variants>(vars)...);
+		}
+	#elif defined(JSON_DTO_HAS_EXPERIMENTAL_VARIANT)
+		template<class... Types>
+		using variant = std::experimental::variant<Types...>;
+
+		template <class T, class... Types>
+		constexpr T& get(std::experimental::variant<Types...>& v) {
+			return std::experimental::get<T>(v);
+		}
+
+		template <class T, class... Types>
+		constexpr T&& get(std::experimental::variant<Types...>&& v) {
+			return std::experimental::get<T>(std::move(v));
+		}
+
+		template <class T, class... Types>
+		constexpr const T& get(const std::experimental::variant<Types...>& v) {
+			return std::experimental::get<T>(v);
+		}
+
+		template <class T, class... Types>
+		constexpr const T&& get(const std::experimental::variant<Types...>&& v) {
+			return std::experimental::get<T>(std::move(v));
+		}
+
+		template <typename... Types>
+		constexpr auto index(const std::experimental::variant<Types...>& v) {
+			return v.index();
+		}
+
+		template <class Visitor, class... Variants>
+		constexpr auto visit(Visitor&& vis, Variants&&... vars) {
+			return std::experimental::visit(std::forward<Visitor>(vis), std::forward<Variants>(vars)...);
 		}
 	#endif
 #endif
