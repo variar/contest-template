@@ -5,4 +5,7 @@ contest_add_library(lib_template
                                     Boost::boost
                                     plog
                                     mpir
+                                    json_dto
+                                    absl::variant
+                                    
                                   TYPES static)
