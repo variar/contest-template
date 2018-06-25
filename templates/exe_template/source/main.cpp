@@ -13,6 +13,8 @@
 #include <mpir.h>
 #include <boost/multiprecision/gmp.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
+
 
 #include <crash_handler/crash_tracer.h>
 
@@ -60,15 +62,28 @@ int main(int argc, char *argv[])
             v *= i;
 
         LOG_INFO << "BOOST done"; // prints 1000!
-        return 42;
+    });
+
+    auto f_mpf = f_boost.then(stlab::default_executor, []
+    {
+        using namespace boost::multiprecision;
+
+        mpf_float v = 1.0f;
+        LOG_INFO << "MPIR float start";
+        // Do some arithmetic:
+        for(unsigned i = 1; i <= 1000; ++i)
+            v *= i;
+
+        LOG_INFO << "MPIR float done" << v;
+        return v;
     });
 
     // Waiting just for illustrational purpose
-    while (!f_boost.get_try()) {
+    while (!f_mpf.get_try()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    std::cout << "The answer is " << f_boost.get_try().value() << "\n";
+    std::cout << "The answer is " << f_mpf.get_try().value() << "\n";
 
     {
         auto guard = gsl::finally([]() { LOG_INFO << "guard done"; });

@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.0)
 cmake_policy(SET CMP0048 NEW)
 project(MPIR VERSION 3.0.0)
 
-
 option(MPIR_GMP "Enable GMP compatibility and generate gmp.h header" ON)
 option(MPIR_TESTS "Enable MPIR tests" OFF)
 
@@ -55,7 +54,7 @@ file(GLOB MPQ_SOURCES "mpq/*.c")
 file(GLOB MPZ_SOURCES "mpz/*.c")
 file(GLOB PRINTF_SOURCES "printf/*.c")
 file(GLOB SCANF_SOURCES "scanf/*.c")
-set(SOURCES assert.c compat.c errno.c invalid.c memory.c mp_bpl.c mp_clz_tab.c mp_dv_tab.c mp_get_fns.c mp_minv_tab.c
+set(SOURCES assert.c compat.c errno.c extract-dbl.c invalid.c memory.c mp_bpl.c mp_clz_tab.c mp_dv_tab.c mp_get_fns.c mp_minv_tab.c
 mp_set_fns.c nextprime.c primesieve.c randbui.c randclr.c randdef.c randiset.c randlc2s.c randlc2x.c randmt.c randmts.c
 randmui.c rands.c randsd.c randsdui.c tal-reent.c version.c)
 
