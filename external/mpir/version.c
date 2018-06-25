@@ -28,5 +28,5 @@ const char * const gmp_version = GMP_VERSION;
 #if defined( _MSC_VER )
 const char * const mpir_version = _MSC_MPIR_VERSION;
 #else
-const char * const mpir_version = __MPIR_RELEASE;
+const char * const mpir_version = VERSION;
 #endif
