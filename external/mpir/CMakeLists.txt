@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
 cmake_policy(SET CMP0048 NEW)
-project(MPIR VERSION 3.0.0)
 
 option(MPIR_GMP "Enable GMP compatibility and generate gmp.h header" ON)
 option(MPIR_TESTS "Enable MPIR tests" OFF)
@@ -36,8 +35,7 @@ check_include_file(inttypes.h HAVE_INTTYPES_H)
 check_include_file(unistd.h HAVE_UNISTD_H)
 check_include_file(stdarg.h HAVE_STDARG)
 set(WANT_TMP_ALLOCA "1")
-message("VERSION: ${PROJECT_VERSION}")
-set(VERSION "${PROJECT_VERSION}")
+set(MPIR_VERSION "3.0.0")
 configure_file(config.h.in config.h)
 
 configure_file(gmp-mparam.h.in gmp-mparam.h)
@@ -69,7 +67,7 @@ add_library(mpir STATIC
     ${PRINTF_SOURCES}
     ${SCANF_SOURCES}
 )
-target_include_directories(mpir PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(mpir SYSTEM PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 file(GLOB MPIRCXX_SOURCES "cxx/*.cc")
 add_library(

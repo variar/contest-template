@@ -26,4 +26,6 @@
 
 #cmakedefine HAVE_STRCHR @HAVE_STRCHR@
 
-#cmakedefine VERSION "@VERSION@"
+#cmakedefine HAVE_RAISE @HAVE_RAISE@
+
+#cmakedefine VERSION "@MPIR_VERSION@"
