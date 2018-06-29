@@ -24,6 +24,8 @@ MA 02110-1301, USA. */
 #include "mpir.h"
 #include "gmp-impl.h"
 
+#include "config.h"
+
 const char * const gmp_version = GMP_VERSION;
 #if defined( _MSC_VER )
 const char * const mpir_version = _MSC_MPIR_VERSION;

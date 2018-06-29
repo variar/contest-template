@@ -35,7 +35,7 @@ check_include_file(inttypes.h HAVE_INTTYPES_H)
 check_include_file(unistd.h HAVE_UNISTD_H)
 check_include_file(stdarg.h HAVE_STDARG)
 set(WANT_TMP_ALLOCA "1")
-set(MPIR_VERSION "3.0.0")
+set(VERSION "3")
 configure_file(config.h.in config.h)
 
 configure_file(gmp-mparam.h.in gmp-mparam.h)

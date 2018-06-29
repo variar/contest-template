@@ -153,11 +153,11 @@ macro(sfml_add_library target)
     endif()
 
     # add the install rule
-    install(TARGETS ${target} EXPORT SFMLConfigExport
-            RUNTIME DESTINATION bin COMPONENT bin
-            LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT bin
-            ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT devel
-            FRAMEWORK DESTINATION "." COMPONENT bin)
+    #install(TARGETS ${target} EXPORT SFMLConfigExport
+    #        RUNTIME DESTINATION bin COMPONENT bin
+    #        LIBRARY DESTINATION lib${LIB_SUFFIX} COMPONENT bin
+    #        ARCHIVE DESTINATION lib${LIB_SUFFIX} COMPONENT devel
+    #        FRAMEWORK DESTINATION "." COMPONENT bin)
 
     # add <project>/include as public include directory
     target_include_directories(${target}
