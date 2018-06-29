@@ -14,6 +14,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/LineShape.hpp>
 
 
 #include <ui_lib/ui_container.h>
@@ -22,12 +23,19 @@
 #include <absl/debugging/failure_signal_handler.h>
 #include <absl/debugging/symbolize.h>
 
+#include <numeric>
+
 class World 
 {
     struct Circle
     {
         sf::CircleShape shape;
         sf::Text text;
+
+        sf::Vector2f center() const
+        {
+            return shape.getPosition() + sf::Vector2f{shape.getRadius(), shape.getRadius()};
+        }
     };
 
 public:
@@ -76,6 +84,16 @@ public:
             renderTarget.draw(c.shape);
             c.text.setPosition(c.shape.getPosition() + sf::Vector2f{c.shape.getRadius()*3, 0.f});
             renderTarget.draw(c.text);
+        }
+
+        if (m_circles.size() > 1) {
+            std::accumulate(m_circles.begin() + 1, m_circles.end(), m_circles.front(), 
+            [&renderTarget](const World::Circle& prev, const World::Circle& current)
+            {
+                auto line = sf::LineShape{prev.center(), current.center()};
+                renderTarget.draw(line);
+                return current;
+            });
         }
     }
 
