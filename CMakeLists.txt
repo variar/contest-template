@@ -54,6 +54,7 @@ set(SFML_BUILD_AUDIO OFF CACHE BOOL "build audio")
 set(SFGUI_INCLUDE_FONT ON CACHE BOOL "use builtin font")
 
 add_subdirectory(external)
+add_subdirectory(libs)
 add_subdirectory(templates)
 
 enable_testing()

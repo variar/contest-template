@@ -1,14 +1,24 @@
-#include <ui_lib/ui_parameters_wrappers.h>
+#include <ui_lib/imgui_visitor.h>
+
+#include <imgui/imgui.h>
 
 #include <cstring>
 
 namespace ui
 {
 
+namespace
+{
+    constexpr ImGuiInputTextFlags MakeFlags(bool isReadOnly)
+    {
+        return isReadOnly ? ImGuiInputTextFlags_ReadOnly :  ImGuiInputTextFlags_None;
+    }
+}
+
 ImGuiParamsVisitor::ImGuiParamsVisitor(const std::string& paramName, bool isReadOnly)
 : m_paramName{paramName}
 , m_label{ "##" + paramName }
-, m_flags{isReadOnly ? ImGuiInputTextFlags_ReadOnly :  ImGuiInputTextFlags_None} 
+, m_isReadOnly{isReadOnly} 
 {
     ImGui::Text("%s", m_paramName.c_str());
 }
@@ -19,7 +29,7 @@ void ImGuiParamsVisitor::operator()(std::string& param)
     buffer.resize(param.size() + 1024);
     std::strcpy(buffer.data(), param.c_str());
 
-    if (ImGui::InputText(m_label.c_str(), buffer.data(), buffer.size(), m_flags))
+    if (ImGui::InputText(m_label.c_str(), buffer.data(), buffer.size(), MakeFlags(m_isReadOnly)))
     {
         param = std::string(buffer.data());
     }
@@ -32,12 +42,12 @@ void ImGuiParamsVisitor::operator()(bool& param)
 
 void ImGuiParamsVisitor::operator()(int& param)
 {
-    ImGui::InputInt(m_label.c_str(), &param, 1, 100, m_flags);
+    ImGui::InputInt(m_label.c_str(), &param, 1, 100, MakeFlags(m_isReadOnly));
 }
 
 void ImGuiParamsVisitor::operator()(float& param)
 {
-    ImGui::InputFloat(m_label.c_str(), &param, 1.f, 10.f, "%.6f", m_flags);
+    ImGui::InputFloat(m_label.c_str(), &param, 1.f, 10.f, "%.6f", MakeFlags(m_isReadOnly));
 }
 
 void ImGuiParamsVisitor::operator()(RadioOptions& param)

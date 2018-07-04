@@ -3,8 +3,10 @@ contest_add_ui_library(ui_lib
         source/imgui_visitor.cpp
         source/tinyfiledialogs.c
         source/helpers.cpp
-        include/ui_lib/ui_container.h
-        include/ui_lib/ui_parameters_wrappers.h
+        source/ui_frame.cpp
+        include/ui_lib/world.h
+        include/ui_lib/ui_frame.h
+        include/ui_lib/world_parameters.h
         include/ui_lib/helpers.h
     LIBS
         imgui

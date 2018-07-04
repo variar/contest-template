@@ -17,7 +17,7 @@
 #include <SFML/Graphics/LineShape.hpp>
 
 
-#include <ui_lib/ui_container.h>
+#include <ui_lib/ui_frame.h>
 #include <ui_lib/helpers.h>
 
 #include <absl/debugging/failure_signal_handler.h>
@@ -25,7 +25,7 @@
 
 #include <numeric>
 
-class World 
+class World : public ui::World
 {
     struct Circle
     {
@@ -44,12 +44,12 @@ public:
         m_selectedCircle = m_circles.end();
     }
 
-    sf::Vector2u GetSize()
+    sf::Vector2u GetSize() const override
     {
         return {1000, 1000};
     }
 
-    void Draw(sf::RenderTarget& renderTarget)
+    void Draw(sf::RenderTarget& renderTarget) override
     {
         bool isBlack = true;
 
@@ -97,7 +97,7 @@ public:
         }
     }
 
-    void ProcessEvent(const sf::Event& event, sf::Vector2f worldCoords)
+    void ProcessEvent(const sf::Event& event, const sf::Vector2f& worldCoords) override
     {
         const auto isShiftPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
 
@@ -157,7 +157,7 @@ public:
         }
     }
 
-    ui::WorldParameters GetParams()
+    ui::WorldParameters GetParams() const override
     {
         ui::WorldParameters params;
         params.emplace_back("Circle radius", m_circleRadius);
@@ -165,12 +165,12 @@ public:
         return params;
     }
 
-    void SetParams(ui::WorldParameters&& params)
+    void SetParams(const ui::WorldParameters& params) override
     {
         m_circleRadius = ui::GetParamByName<float>(params, "Circle radius");
     }
 
-    ui::WorldActions GetActions()
+    ui::WorldActions GetActions() override
     {
         return ui::WorldActions
                { 
@@ -183,17 +183,17 @@ public:
 
     }
 
-    void SetFont(std::shared_ptr<sf::Font> font)
+    void SetFont(const std::shared_ptr<sf::Font>& font) override
     {
-        m_font = std::move(font);
+        m_font = font;
     }
 
-    std::vector<std::string> GetLog() const
+    std::vector<std::string> GetLog() const override
     {
         return m_log;
     }
 
-    void ClearLog()
+    void ClearLog() override
     {
         m_log.clear();
     }
@@ -224,8 +224,8 @@ int main(int argc, char *argv[])
     auto path = ui::FileHelpers::GetSaveFileName();
     LOG_INFO << path;
 
-    ui::UiContainer<World> container{1280, 720, "Ui template", std::make_unique<World>()};
-    container.Run();
+    auto ui = ui::UiFrame::MakeUi(1280, 720, "Ui template", std::make_unique<World>());
+    ui->Run();
 
     return 0;
 }
