@@ -20,4 +20,6 @@ if (WIN32)
 target_link_libraries(ui_lib PUBLIC comdlg32 ole32)
 endif()
 
+set_target_properties(baseapp PROPERTIES FOLDER "libs")
+
 cotire(ui_lib)

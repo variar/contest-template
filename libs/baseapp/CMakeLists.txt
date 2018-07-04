@@ -1,0 +1,13 @@
+contest_add_library(baseapp
+    SOURCES
+        source/application.cpp
+        source/crash_tracer.cpp
+        include/baseapp/crash_tracer.h
+        include/baseapp/application.h
+    LIBS
+        plog
+        absl::symbolize
+        absl::failure_signal_handler
+        absl::strings
+        absl::str_format
+    )

@@ -1,8 +1,6 @@
 #include <dll_template/dummy_dll.h>
 #include <dll_template/log.h>
 
-#include <plog/Appenders/ConsoleAppender.h>
-
 #include <imgui/imgui.h>
 #include <imgui/imgui-SFML.h>
 #include <SFML/Graphics/View.hpp>
@@ -16,12 +14,10 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/LineShape.hpp>
 
-
 #include <ui_lib/ui_frame.h>
 #include <ui_lib/helpers.h>
 
-#include <absl/debugging/failure_signal_handler.h>
-#include <absl/debugging/symbolize.h>
+#include <baseapp/application.h>
 
 #include <numeric>
 
@@ -214,12 +210,7 @@ private:
 
 int main(int argc, char *argv[])
 {
-    absl::InitializeSymbolizer(argv[0]);
-    absl::FailureSignalHandlerOptions options;
-    absl::InstallFailureSignalHandler(options);
-
-    plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-    plog::init(plog::debug, &consoleAppender);
+    auto app = baseapp::Application(argv[0]);
 
     auto path = ui::FileHelpers::GetSaveFileName();
     LOG_INFO << path;

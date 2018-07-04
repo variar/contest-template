@@ -5,7 +5,7 @@ set(CONTEST_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR})
 function(contest_wall target)
     #see https://lefticus.gitbooks.io/cpp-best-practices/content/02-Use_the_Tools_Available.html
     if(UNIX)
-        target_compile_options(${target} PRIVATE -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Wno-unused-parameter -Wno-unused-variable)
+        target_compile_options(${target} PRIVATE -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Wno-unused-parameter -Wno-unused-variable -Wno-gcc-compat)
     elseif(WIN32)
         target_compile_definitions(${target} PRIVATE  /W4 /W44640 /w14265 /we4289 /w14296 /w14640 /w14905 /w14906 /w14928)
     endif()
