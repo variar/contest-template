@@ -6,8 +6,6 @@
 #include <stlab/concurrency/default_executor.hpp>
 #include <stlab/concurrency/future.hpp>
 
-#include <plog/Appenders/ConsoleAppender.h>
-
 #include <gsl/gsl_util.h>
 
 #include <mpir.h>
@@ -16,25 +14,22 @@
 #include <boost/multiprecision/cpp_int.hpp>
 
 
-#include <crash_handler/crash_tracer.h>
+#include <baseapp/application.h>
 
 int main(int argc, char *argv[])
 {
-   CrashTracer{argv[0]};
-
-    plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
-    plog::init(plog::debug, &consoleAppender);
+    auto app = baseapp::Application(argv[0]);
     
-    CLI::App app{"dummy program to test externals"};
+    CLI::App cli{"dummy program to test externals"};
 
-    app.add_flag_function("-c,--crash",
+    cli.add_flag_function("-c,--crash",
              [](size_t) {int* a = nullptr; *a = 0;},
              "crash switch");
    
     try {
-        app.parse(argc, argv);
+        cli.parse(argc, argv);
     } catch (const CLI::ParseError &e) {
-        return app.exit(e);
+        return cli.exit(e);
     }
 
     Dummy d;
