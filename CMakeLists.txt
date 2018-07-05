@@ -29,7 +29,7 @@ include(cotire)
 include(contest)
 
 if(WIN32)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS -DNOMINMAX)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS -DNOMINMAX -D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
     ucm_add_flags(/MP4)
 endif()
 
