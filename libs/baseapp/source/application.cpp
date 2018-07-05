@@ -4,6 +4,7 @@
 #include <plog/Appenders/ConsoleAppender.h>
 #include <plog/Appenders/RollingFileAppender.h>
 
+#include <absl/strings/string_view.h>
 #include <absl/strings/str_split.h>
 #include <absl/strings/str_format.h>
 
@@ -22,7 +23,7 @@ namespace
 
 std::string GetLogName(const char* modulePath)
 {
-    const std::vector<std::string_view> pathParts = absl::StrSplit(modulePath, absl::ByAnyChar("/\\"));
+    const std::vector<absl::string_view> pathParts = absl::StrSplit(modulePath, absl::ByAnyChar("/\\"));
 
 	time_t now = time(nullptr);
 	tm* t = localtime(&now);
