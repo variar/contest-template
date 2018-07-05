@@ -20,7 +20,7 @@ namespace plog
         ConsoleAppender(OutputStream outStream = OutputStream::kCout)
             : m_isatty(!!_isatty(_fileno(outStream == OutputStream::kCout ? stdout : stderr)))
             , m_outputStream(outStream == OutputStream::kCout ? std::cout : std::cerr)
-            , m_stdoutHandle()
+            , m_outputHandle()
         {
             if (m_isatty)
             {
