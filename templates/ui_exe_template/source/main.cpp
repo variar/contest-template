@@ -17,7 +17,7 @@
 #include <ui_lib/ui_frame.h>
 #include <ui_lib/helpers.h>
 
-#include <baseapp/application.h>
+#include <app_utils/logger.h>
 
 #include <numeric>
 
@@ -210,7 +210,10 @@ private:
 
 int main(int argc, char *argv[])
 {
-    auto app = baseapp::Application(argv[0]);
+    auto app = app_utils::Logger(argc, argv, 
+                                 app_utils::LoggerChannel::Console,
+                                 app_utils::LoggerFlags::CrashTrace 
+                                 | app_utils::LoggerFlags::Verbose);
 
     auto path = ui::FileHelpers::GetSaveFileName();
     LOG_INFO << path;

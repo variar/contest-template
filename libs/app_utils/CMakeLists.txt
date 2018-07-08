@@ -1,9 +1,9 @@
 contest_add_library(baseapp
     SOURCES
-        source/application.cpp
+        source/logger.cpp
         source/crash_tracer.cpp
-        include/baseapp/crash_tracer.h
-        include/baseapp/application.h
+        include/app_utils/logger.h
+        include/app_utils/crash_tracer.h
     LIBS
         plog
         absl::symbolize

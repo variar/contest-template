@@ -14,11 +14,14 @@
 #include <boost/multiprecision/cpp_int.hpp>
 
 
-#include <baseapp/application.h>
+#include <app_utils/logger.h>
 
 int main(int argc, char *argv[])
 {
-    auto app = baseapp::Application(argv[0]);
+    auto logger = app_utils::Logger(argc, argv,
+                                    app_utils::LoggerChannel::File,
+                                    app_utils::LoggerFlags::CrashTrace 
+                                    | app_utils::LoggerFlags::Verbose);
     
     CLI::App cli{"dummy program to test externals"};
 
