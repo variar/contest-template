@@ -13,7 +13,6 @@
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 
-
 #include <app_utils/logger.h>
 
 int main(int argc, char *argv[])
@@ -48,9 +47,11 @@ int main(int argc, char *argv[])
             v *= i;
 
         LOG_INFO << "MPIR done" << v;
+
+        return v;
     });
 
-    auto f_boost = f_mpir.then(stlab::default_executor,[] {
+    auto f_boost = f_mpir.then(stlab::default_executor,[] (auto){
         using namespace boost::multiprecision;
         cpp_rational v = 1;
 
@@ -60,9 +61,11 @@ int main(int argc, char *argv[])
             v *= i;
 
         LOG_INFO << "BOOST done"; // prints 1000!
+        
+        return v;
     });
 
-    auto f_mpf = f_boost.then(stlab::default_executor, []
+    auto f_mpf = f_boost.then(stlab::default_executor, [] (auto)
     {
         using namespace boost::multiprecision;
 

@@ -72,6 +72,8 @@ CTestTestfile.cmake
 **/Debug
 **/Release
 
+**/.vscode
+
 # QtCreator
 
 *.autosave

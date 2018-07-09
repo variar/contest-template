@@ -10,6 +10,7 @@ contest_add_exe(exe_template
         stlab
         plog
         gsl
+        fplus
         mpirxx
         absl::strings
         absl::optional
