@@ -15,6 +15,7 @@
 
 #ifdef _WIN32
 #include <process.h>
+#include <boost/locale.hpp>
 #else
 #include <unistd.h>
 #define _getpid getpid
@@ -33,7 +34,7 @@ std::string GetLogName(const char* modulePath)
     return absl::StrFormat(
         "%s_%s_%d.log",
         pathParts.empty() ? "log" : pathParts.back(),
-        absl::FormatTime("%F", absl::Now(), absl::LocalTimeZone()),
+        absl::FormatTime("%m.%d_%H.%M", absl::Now(), absl::LocalTimeZone()),
         _getpid()
     );
 }
@@ -50,30 +51,39 @@ public:
     static util::nstring format(const Record& record)
     {
         util::nostringstream ss;
-        ss << absl::FormatTime("%H:%M:%E3S", absl::Now(), absl::LocalTimeZone()) << PLOG_NSTR(" ");
-        ss << std::setfill(PLOG_NSTR(' ')) << std::setw(5) << std::left << severityToString(record.getSeverity()) << PLOG_NSTR(" ");
-        ss << absl::StrCat(
-                PLOG_NSTR("["), record.getTid(), PLOG_NSTR("] "),
-                PLOG_NSTR("["), record.getFunc(), PLOG_NSTR("@"), record.getLine(), PLOG_NSTR("] "),
-                record.getMessage(), PLOG_NSTR("\n")
+
+        const auto traceString =  absl::StrCat(
+                absl::FormatTime("%H:%M:%E3S", absl::Now(), absl::LocalTimeZone()), "\t",
+                severityToString(record.getSeverity()), "\t",
+                absl::StrFormat("[%05.d]", record.getTid()), "\t"
+                "[", record.getFunc(), "@", record.getLine(), "] ",
+                record.getMessage(), "\n"
         );
+
+#ifdef _WIN32
+        ss << boost::locale::conv::utf_to_utf<wchar_t>(traceString);
+#else
+        ss << traceString;
+#endif
 
         return ss.str();
     }
 
     static void PrepareHeader(int argc, char** argv)
     {
-        absl::StrAppend(&m_header, "Command line: ");
+        std::string header = "Command line: ";
         for (auto i = 0; i<argc; ++i)
         {
-            absl::StrAppend(&m_header, argv[i]);
+            absl::StrAppend(&header, argv[i]);
         }
 
 #ifdef _WIN32
-        absl::StrAppend(&m_header, "\r\n\r\n");
+        absl::StrAppend(&header, "\r\n\r\n");     
+        m_header = boost::locale::conv::utf_to_utf<wchar_t>(header);  
 #else
-        absl::StrAppend(&m_header, "\n\n");
-#endif
+        absl::StrAppend(&header, "\n\n");
+        m_header = std::move(header);
+#endif 
     }
 
 private:

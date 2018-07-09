@@ -18,19 +18,19 @@ namespace plog
         switch (severity)
         {
         case fatal:
-            return "FATAL";
+            return "FAT";
         case error:
-            return "ERROR";
+            return "ERR";
         case warning:
-            return "WARN";
+            return "WRN";
         case info:
-            return "INFO";
+            return "INF";
         case debug:
-            return "DEBUG";
+            return "DBG";
         case verbose:
-            return "VERB";
+            return "ALL";
         default:
-            return "NONE";
+            return "NON";
         }
     }
 

@@ -6,6 +6,7 @@ contest_add_library(baseapp
         include/app_utils/crash_tracer.h
     LIBS
         plog
+        Boost::locale
         absl::symbolize
         absl::failure_signal_handler
         absl::strings
