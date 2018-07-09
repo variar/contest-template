@@ -210,10 +210,10 @@ private:
 
 int main(int argc, char *argv[])
 {
-    auto app = app_utils::Logger(argc, argv, 
+    app_utils::Logger logger {argc, argv, 
                                  app_utils::LoggerChannel::Console,
                                  app_utils::LoggerFlags::CrashTrace 
-                                 | app_utils::LoggerFlags::Verbose);
+                                 | app_utils::LoggerFlags::Verbose};
 
     auto path = ui::FileHelpers::GetSaveFileName();
     LOG_INFO << path;

@@ -17,10 +17,10 @@
 
 int main(int argc, char *argv[])
 {
-    auto logger = app_utils::Logger(argc, argv,
-                                    app_utils::LoggerChannel::File,
-                                    app_utils::LoggerFlags::CrashTrace 
-                                    | app_utils::LoggerFlags::Verbose);
+    app_utils::Logger logger {argc, argv,
+                            app_utils::LoggerChannel::File,
+                            app_utils::LoggerFlags::CrashTrace 
+                            | app_utils::LoggerFlags::Verbose};
     
     CLI::App cli{"dummy program to test externals"};
 
