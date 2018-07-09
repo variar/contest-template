@@ -15,7 +15,6 @@
 
 #ifdef _WIN32
 #include <process.h>
-#include <boost/locale.hpp>
 #else
 #include <unistd.h>
 #define _getpid getpid
@@ -56,16 +55,16 @@ public:
                 absl::FormatTime("%H:%M:%E3S", absl::Now(), absl::LocalTimeZone()), "\t",
                 severityToString(record.getSeverity()), "\t",
                 absl::StrFormat("[%05.d]", record.getTid()), "\t"
-                "[", record.getFunc(), "@", record.getLine(), "] ",
-                record.getMessage(), "\n"
+                "[", record.getFunc(), "@", record.getLine(), "] "
         );
 
 #ifdef _WIN32
-        ss << boost::locale::conv::utf_to_utf<wchar_t>(traceString);
+        ss << plog::util::toWide(traceString);
 #else
         ss << traceString;
 #endif
 
+        ss << record.getMessage() << "\n";
         return ss.str();
     }
 
@@ -79,7 +78,7 @@ public:
 
 #ifdef _WIN32
         absl::StrAppend(&header, "\r\n\r\n");     
-        m_header = boost::locale::conv::utf_to_utf<wchar_t>(header);  
+        m_header = plog::util::toWide(header);  
 #else
         absl::StrAppend(&header, "\n\n");
         m_header = std::move(header);

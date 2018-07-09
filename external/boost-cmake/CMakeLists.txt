@@ -40,7 +40,7 @@ set(BOOST_LIBS
   filesystem
   graph
   #iostreams
-  locale
+  #locale
   #log
   #math
   #mpi
