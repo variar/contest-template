@@ -26,16 +26,23 @@ namespace app_utils
 namespace
 {
 
-std::string GetLogName(const char* modulePath)
+plog::util::nstring GetLogName(const char* modulePath)
 {
     const std::vector<absl::string_view> pathParts = absl::StrSplit(modulePath, absl::ByAnyChar("/\\"));
 
-    return absl::StrFormat(
+    auto filename = absl::StrFormat(
         "%s_%s_%d.log",
         pathParts.empty() ? "log" : pathParts.back(),
         absl::FormatTime("%m.%d_%H.%M", absl::Now(), absl::LocalTimeZone()),
         _getpid()
     );
+
+#ifdef _WIN32
+        return plog::util::toWide(filename);
+#else
+        return filename;
+#endif
+
 }
 
 using namespace plog;
