@@ -38,7 +38,7 @@ plog::util::nstring GetLogName(const char* modulePath)
     );
 
 #ifdef _WIN32
-        return plog::util::toWide(filename);
+        return plog::util::toWide(filename.c_str());
 #else
         return filename;
 #endif
@@ -66,7 +66,7 @@ public:
         );
 
 #ifdef _WIN32
-        ss << plog::util::toWide(traceString);
+        ss << plog::util::toWide(traceString.c_str());
 #else
         ss << traceString;
 #endif
@@ -85,7 +85,7 @@ public:
 
 #ifdef _WIN32
         absl::StrAppend(&header, "\r\n\r\n");     
-        m_header = plog::util::toWide(header);  
+        m_header = plog::util::toWide(header.c_str());  
 #else
         absl::StrAppend(&header, "\n\n");
         m_header = std::move(header);
