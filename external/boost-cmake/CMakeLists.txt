@@ -31,16 +31,16 @@ set(BOOST_LIBS
   # Compiled libs
   atomic
   chrono
-  #container
+  container
   #context
   #coroutine
   #date_time
   exception
   #fiber
   filesystem
-  #graph
+  graph
   #iostreams
-  #locale
+  locale
   #log
   #math
   #mpi
@@ -48,7 +48,7 @@ set(BOOST_LIBS
   program_options
   #python # complex module
   #random
-  #regex
+  regex
   serialization
   #signals
   system
